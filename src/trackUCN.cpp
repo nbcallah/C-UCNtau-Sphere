@@ -25,7 +25,7 @@ result fixedEffDaggerHitTime(std::vector<double> state, double dt) {
     res.eStart = res.eStart - MINU + (state[3]*state[3] + state[4]*state[4] + state[5]*state[5])/(2*MASS_N);
     
     double deathTime = -877.7*log(nextU01());
-    if(deathTime > 1400) {
+    if(deathTime > 20) {
             res.energy = res.eStart;
             res.t = deathTime;
             res.ePerp = state[4]*state[4]/(2*MASS_N);

@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
     std::ofstream binfile(fNameRank, std::ios::out | std::ios::binary);
     
     
-    initxorshift(1);
+    initxorshift(0);
     
 //    printf("%d - %d\n", rank*(nTraj/nproc), (rank+1)*(nTraj/nproc));
     
