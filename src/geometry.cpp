@@ -19,7 +19,7 @@ double zOffDipCalc(double t) {
     int nDips = 4;
     int i;
     
-    double holdT = 20.0;
+    double holdT = 1400.0;
     double speed;
     
     double dipHeights[4] = {0.49, 0.380, 0.250, 0.010};

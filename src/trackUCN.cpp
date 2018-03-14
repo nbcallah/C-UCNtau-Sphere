@@ -25,6 +25,20 @@ result fixedEffDaggerHitTime(std::vector<double> state, double dt) {
     res.eStart = res.eStart - MINU + (state[3]*state[3] + state[4]*state[4] + state[5]*state[5])/(2*MASS_N);
     
     double deathTime = -877.7*log(nextU01());
+    if(deathTime > 1400) {
+            res.energy = res.eStart;
+            res.t = deathTime;
+            res.ePerp = state[4]*state[4]/(2*MASS_N);
+            res.x = state[0];
+            res.y = state[1];
+            res.z = state[2];
+            res.zOff = -1;
+            res.nHit = 0;
+            res.nHitHouseLow = 0;
+            res.nHitHouseHigh = 0;
+            res.deathTime = deathTime;
+            return res;
+    }
     
     double settlingTime = 50.0;
     int numSteps = settlingTime/dt;
