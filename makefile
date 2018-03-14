@@ -8,7 +8,7 @@ MPICPP := $(shell command -v mpic++ 2> /dev/null)
 MPICC := $(shell command -v mpicc 2> /dev/null)
 
 ifndef MPICPP
-	CPP=c++
+	CPP=CC
 endif
 ifndef MPICC
 	CC=cc

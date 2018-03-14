@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 #include <getopt.h>
+#include <cstring>
+
 //#include "inc/geometry.hpp"
 
 extern "C" {
