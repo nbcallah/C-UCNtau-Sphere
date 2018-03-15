@@ -2,8 +2,16 @@
 #define TRACKUCN_H
 
 #include <vector>
+#define NRECORDS 50
 
-typedef struct result {
+typedef struct noabsResult {
+    double energy;
+    double theta;
+    float times[NRECORDS];
+    float ePerps[NRECORDS];
+} noabsResult;
+
+typedef struct fixedResult {
     double energy;
     double theta;
     double t;
@@ -17,8 +25,9 @@ typedef struct result {
     int nHitHouseHigh;
     double eStart;
     double deathTime;
-} result;
+} fixedResult;
 
-result fixedEffDaggerHitTime(std::vector<double> state, double dt);
+fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt);
+noabsResult daggerHitTimes(std::vector<double> state, double dt);
 
 #endif /* TRACKUCN_H */

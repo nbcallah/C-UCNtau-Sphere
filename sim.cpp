@@ -15,7 +15,7 @@ extern "C" {
     #include "inc/xorshift.h"
 }
 
-/*typedef struct result {
+/*typedef struct fixedResult {
     double energy;
     double theta;
     double t;
@@ -29,9 +29,9 @@ extern "C" {
     int nHitHouseHigh;
     double eStart;
     double deathTime;
-} result;*/
+} fixedResult;*/
 
-void writeRes(std::ofstream &binfile, result res) {
+void writeFixedRes(std::ofstream &binfile, fixedResult res) {
     const size_t buff_len = sizeof(unsigned int) + 8*sizeof(double) + 3*sizeof(int) + 2*sizeof(double) + sizeof(unsigned int);
     char buf[buff_len];
     if(!binfile.is_open()) {
@@ -53,6 +53,22 @@ void writeRes(std::ofstream &binfile, result res) {
     *((double *)(&buf[0] + sizeof(unsigned int) + 8*sizeof(double) + 3*sizeof(int))) = res.eStart;
     *((double *)(&buf[0] + sizeof(unsigned int) + 8*sizeof(double) + 3*sizeof(int) + 1*sizeof(double))) = res.deathTime;
     *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 8*sizeof(double) + 3*sizeof(int) + 2*sizeof(double))) = buff_len - 2*sizeof(unsigned int);
+    binfile.write(buf, buff_len);
+}
+
+void writeNoabsRes(std::ofstream &binfile, noabsResult res) {
+    const size_t buff_len = sizeof(unsigned int) + 2*sizeof(double) + 2*NRECORDS*sizeof(float) + sizeof(unsigned int);
+    char buf[buff_len];
+    if(!binfile.is_open()) {
+        fprintf(stderr, "Error! file closed\n");
+        return;
+    }
+    *((unsigned int *)(&buf[0])) = buff_len - 2*sizeof(unsigned int);
+    *((double *)(&buf[0] + sizeof(unsigned int))) = res.energy;
+    *((double *)(&buf[0] + sizeof(unsigned int) + 1*sizeof(double))) = res.theta;
+    std::memcpy((void *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(double)), (void *)&(res.times[0]), NRECORDS*sizeof(float));
+    std::memcpy((void *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(double) + NRECORDS*sizeof(float)), (void *)&(res.ePerps[0]), NRECORDS*sizeof(float));
+    *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(double) + 2*NRECORDS*sizeof(float))) = buff_len - 2*sizeof(unsigned int);
     binfile.write(buf, buff_len);
 }
 
@@ -130,7 +146,8 @@ int main(int argc, char** argv) {
             traj.push_back(randomPointTrapOptimum());
         }
         else {
-            randomPointTrapOptimum();
+//            randomPointTrapOptimum();
+            randomPointTrapEdE();
         }
     }
     
@@ -139,8 +156,10 @@ int main(int argc, char** argv) {
     }
         
     for(auto it = traj.begin(); it < traj.end(); it++) {
-        result res = fixedEffDaggerHitTime(*it, dt);
-        writeRes(binfile, res);
+//        fixedResult res = fixedEffDaggerHitTime(*it, dt);
+        noabsResult res = daggerHitTimes(*it, dt);
+//        writeFixedRes(binfile, res);
+        writeNoabsRes(binfile, res);
     }
     
     binfile.close();
