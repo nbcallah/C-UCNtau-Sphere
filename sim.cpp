@@ -9,7 +9,7 @@
 #include <getopt.h>
 #include <cstring>
 
-#include "inc/geometry.hpp"
+//#include "inc/geometry.hpp"
 
 extern "C" {
     #include "inc/xorshift.h"
@@ -73,11 +73,6 @@ void writeNoabsRes(std::ofstream &binfile, noabsResult res) {
 }
 
 int main(int argc, char** argv) {
-    for(int i = 0; i < 1000; i++) {
-        printf("%d %f\n", i, zOffDipCalc(i));
-    }
-    return 0;
-    
     int ierr = MPI_Init(&argc, &argv);
     int nproc;
     int rank;
