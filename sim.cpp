@@ -9,6 +9,8 @@
 #include <getopt.h>
 #include <cstring>
 
+#include "setup.h"
+
 //#include "inc/geometry.hpp"
 
 extern "C" {
@@ -135,7 +137,7 @@ int main(int argc, char** argv) {
     std::ofstream binfile(fNameRank, std::ios::out | std::ios::binary);
     
     
-    initxorshift(0);
+    initxorshift(INITBLOCK);
     
 //    printf("%d - %d\n", rank*(nTraj/nproc), (rank+1)*(nTraj/nproc));
     
@@ -143,11 +145,10 @@ int main(int argc, char** argv) {
     traj.reserve(nTraj/nproc);
     for(int i = 0; i < nTraj; i++) {
         if(i >= rank*(nTraj/nproc) && i < (rank+1)*(nTraj/nproc)) {
-            traj.push_back(randomPointTrapOptimum());
+            traj.push_back(TRACKGENERATOR());
         }
         else {
-//            randomPointTrapOptimum();
-            randomPointTrapEdE();
+            TRACKGENERATOR();
         }
     }
     
@@ -156,10 +157,9 @@ int main(int argc, char** argv) {
     }
         
     for(auto it = traj.begin(); it < traj.end(); it++) {
-//        fixedResult res = fixedEffDaggerHitTime(*it, dt);
-        noabsResult res = daggerHitTimes(*it, dt);
+        auto res = TRACKER(*it, dt);
 //        writeFixedRes(binfile, res);
-        writeNoabsRes(binfile, res);
+        WRITER(binfile, res);
     }
     
     binfile.close();
