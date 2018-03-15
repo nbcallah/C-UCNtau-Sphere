@@ -16,14 +16,24 @@ std::vector<double> cross(std::vector<double> a, std::vector<double> b) {
 
 double zOffDipCalc(double t) {
     double z;
-    int nDips = 4;
     int i;
     
-    double holdT = 20.0;
+    double holdT = 100.0;
     double speed;
     
-    double dipHeights[4] = {0.49, 0.380, 0.250, 0.010};
-    double dipEnds[4] = {holdT, holdT+20.0, holdT+40.0, holdT+140.0};
+//    int nDips = 10;
+//    double dipHeights[10] = {0.49, 0.380, 0.250, 0.180, 0.140, 0.110, 0.080, 0.060, 0.040, 0.010}; //9 dip
+//    double dipEnds[10] = {0.0,  40.0,  80.0,  100.0, 120.0, 140.0, 160.0, 180.0, 200.0, 300.0}; //9 dip
+    
+    int nDips = 4;
+    double dipHeights[4] = {0.49, 0.380, 0.250, 0.010}; //3 dip
+    double dipEnds[4] = {holdT, holdT+20.0, holdT+40.0, holdT+140.0}; //3 dip
+    
+//    int nDips = 12;
+//    double dipHeights[12] = {0.49, 0.250, 0.49, 0.380, 0.250, 0.180, 0.140, 0.110, 0.080, 0.060, 0.040, 0.010}; //9Dip PSE
+//    double dipEnds[12] = {0.0,  200.0,  200.0+holdT, 200.0+holdT+20.0, 200.0+holdT+40.0, 200.0+holdT+50.0,
+//                200.0+holdT+60.0, 200.0+holdT+70.0, 200.0+holdT+80.0, 200.0+holdT+90.0,
+//                200.0+holdT+100.0, 200.0+holdT+120.0}; //9 dip PSE
     
     if(t > dipEnds[nDips-1]) {
         return 0.01;

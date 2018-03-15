@@ -4,5 +4,6 @@
 #include <vector>
 
 std::vector<double> randomPointTrapOptimum();
+std::vector<double> randomPointTrapEdE();
 
 #endif /* TRACK_GEN_H */
