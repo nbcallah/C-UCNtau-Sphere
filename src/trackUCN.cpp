@@ -48,7 +48,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt) {
 
         if((prevState[1] < 0 && state[1] > 0) || (prevState[1] > 0 && state[1] < 0)) {
             double fracTravel = fabs(prevState[1])/(fabs(state[1]) + fabs(prevState[1]));
-            double predX = prevState[0] + fracTravel * (state[0] - prevState[1]);
+            double predX = prevState[0] + fracTravel * (state[0] - prevState[0]);
             double predZ = prevState[2] + fracTravel * (state[2] - prevState[2]);
             
             double zOff = zOffDipCalc(t - SETTLINGTIME);
@@ -166,7 +166,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
         }
         if((prevState[1] < 0 && state[1] > 0) || (prevState[1] > 0 && state[1] < 0)) {
             double fracTravel = fabs(prevState[1])/(fabs(state[1]) + fabs(prevState[1]));
-            double predX = prevState[0] + fracTravel * (state[0] - prevState[1]);
+            double predX = prevState[0] + fracTravel * (state[0] - prevState[0]);
             double predZ = prevState[2] + fracTravel * (state[2] - prevState[2]);
             
             double zOff = zOffDipCalc(t - SETTLINGTIME);
