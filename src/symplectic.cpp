@@ -6,10 +6,8 @@ extern "C" {
     #include "../inc/fields_nate.h"
 }
 
-void symplecticStep(std::vector<double> &state, double deltaT, double &energy) {
-    double fx, fy, fz, totalU, t, freq;
-    t = 0.0;
-    freq = 0.0;
+void symplecticStep(std::vector<double> &state, double deltaT, double &energy, double t) {
+    double fx, fy, fz, totalU;
     int n;
     n = 0;
     
@@ -26,7 +24,7 @@ void symplecticStep(std::vector<double> &state, double deltaT, double &energy) {
         .3340036032863214255e0,
     };
     
-    force(&state[0], &state[1], &state[2], &fx, &fy, &fz, &totalU, &t, &freq);
+    force(&state[0], &state[1], &state[2], &fx, &fy, &fz, &totalU, &t);
     energy = totalU - MINU + (state[3]*state[3] + state[4]*state[4] + state[5]*state[5])/(2.0*MASS_N);
 
     state[3] = state[3] + b[n]*fx*deltaT;
@@ -35,14 +33,16 @@ void symplecticStep(std::vector<double> &state, double deltaT, double &energy) {
     state[0] = state[0] + a[n]*state[3]*deltaT/MASS_N;
     state[1] = state[1] + a[n]*state[4]*deltaT/MASS_N;
     state[2] = state[2] + a[n]*state[5]*deltaT/MASS_N;
+    t = t + a[n]*deltaT;
     
     for(n = 1; n < 4; n++) {
-        force(&state[0], &state[1], &state[2], &fx, &fy, &fz, &totalU, &t, &freq);
+        force(&state[0], &state[1], &state[2], &fx, &fy, &fz, &totalU, &t);
         state[3] = state[3] + b[n]*fx*deltaT;
         state[4] = state[4] + b[n]*fy*deltaT;
         state[5] = state[5] + b[n]*fz*deltaT;
         state[0] = state[0] + a[n]*state[3]*deltaT/MASS_N;
         state[1] = state[1] + a[n]*state[4]*deltaT/MASS_N;
         state[2] = state[2] + a[n]*state[5]*deltaT/MASS_N;
+        t = t + a[n]*deltaT;
     }
 }

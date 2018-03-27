@@ -27,3 +27,6 @@
 //#define NDIPS 12
 //#define HEIGHTS {0.49, 0.250, 0.49, 0.380, 0.250, 0.180, 0.140, 0.110, 0.080, 0.060, 0.040, 0.010}
 //#define ENDTIMES {0.0,  200.0,  200.0+holdT, 200.0+holdT+20.0, 200.0+holdT+40.0, 200.0+holdT+50.0, 200.0+holdT+60.0, 200.0+holdT+70.0, 200.0+holdT+80.0, 200.0+holdT+90.0, 200.0+holdT+100.0, 200.0+holdT+120.0}
+
+#define AMPLITUDE 0.000001
+#define FREQ 60.0

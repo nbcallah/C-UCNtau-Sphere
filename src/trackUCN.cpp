@@ -23,14 +23,13 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt) {
     res.theta = acos(state[5]/sqrt(state[3]*state[3] + state[4]*state[4] + state[5]*state[5]));
 
     double t = 0;
-    double freq = 0;
-    potential(&state[0], &state[1], &state[2], &(res.energy), &t, &freq);
+    potential(&state[0], &state[1], &state[2], &(res.energy), &t);
     res.energy = res.energy - MINU + (state[3]*state[3] + state[4]*state[4] + state[5]*state[5])/(2*MASS_N);
 
     int numSteps = SETTLINGTIME/dt;
     double energy;
     for(int i = 0; i < numSteps; i++) {
-        symplecticStep(state, dt, energy);
+        symplecticStep(state, dt, energy, t);
         t = t + dt;
     }
     
@@ -40,7 +39,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt) {
     std::vector<double> prevState(6);
     while(true) {
         prevState = state;
-        symplecticStep(state, dt, energy);
+        symplecticStep(state, dt, energy, t);
         t = t + dt;
         if(t >= 3000.0) {
             break;
@@ -100,8 +99,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
     fixedResult res;
     res.theta = acos(state[5]/sqrt(state[3]*state[3] + state[4]*state[4] + state[5]*state[5]));
     double t = 0;
-    double freq = 0;
-    potential(&state[0], &state[1], &state[2], &(res.eStart), &t, &freq);
+    potential(&state[0], &state[1], &state[2], &(res.eStart), &t);
     res.eStart = res.eStart - MINU + (state[3]*state[3] + state[4]*state[4] + state[5]*state[5])/(2*MASS_N);
     
     double deathTime = -877.7*log(nextU01());
@@ -124,7 +122,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
     int numSteps = SETTLINGTIME/dt;
     double energy;
     for(int i = 0; i < numSteps; i++) {
-        symplecticStep(state, dt, energy);
+        symplecticStep(state, dt, energy, t);
         t = t + dt;
     }
     
@@ -134,7 +132,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
     std::vector<double> prevState(6);
     while(true) {
         prevState = state;
-        symplecticStep(state, dt, energy);
+        symplecticStep(state, dt, energy, t);
         t = t + dt;
         if(t - SETTLINGTIME > deathTime) {
             res.energy = energy;

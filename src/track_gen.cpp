@@ -14,9 +14,7 @@ std::vector<double> randomPointTrapEdE() {
     double maxEnergy = GRAV*MASS_N*0.3444;
     double maxP = sqrt(2*MASS_N*maxEnergy);
     
-    double t = 0.0;
-    double freq = 0.0;
-    
+    double t = 0.0;    
     
     double energy;
     while(true) {
@@ -34,7 +32,7 @@ std::vector<double> randomPointTrapEdE() {
         state[2] = -1.464413669130002;
         state[0] = nextU01()*0.15 - 0.075;
         state[1] = nextU01()*0.15 - 0.075;
-        potential(&state[0], &state[1], &state[2], &totalU, &t, &freq);
+        potential(&state[0], &state[1], &state[2], &totalU, &t);
         totalU = totalU - MINU;
     } while(totalU >= energy);
     
@@ -63,9 +61,7 @@ std::vector<double> randomPointTrapOptimum() {
     double maxEnergy = GRAV*MASS_N*0.3444;
     double maxP = sqrt(2*MASS_N*maxEnergy);
     
-    double t = 0.0;
-    double freq = 0.0;
-    
+    double t = 0.0;    
     
     double energy;
     while(true) {
@@ -83,7 +79,7 @@ std::vector<double> randomPointTrapOptimum() {
         state[2] = -1.464413669130002;
         state[0] = nextU01()*0.15 - 0.075;
         state[1] = nextU01()*0.15 - 0.075;
-        potential(&state[0], &state[1], &state[2], &totalU, &t, &freq);
+        potential(&state[0], &state[1], &state[2], &totalU, &t);
         totalU = totalU - MINU;
     } while(totalU >= energy);
     

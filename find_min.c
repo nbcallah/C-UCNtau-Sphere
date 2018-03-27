@@ -12,8 +12,7 @@ double fn1 (double z_in, void * params) {
     y = 0.0;
     z = z_in;
     t = 0.0;
-    freq = 0.0;
-    force(&x, &y, &z, &fx, &fy, &fz, &u, &t, &freq);
+    force(&x, &y, &z, &fx, &fy, &fz, &u, &t);
     return u;
 }
 
