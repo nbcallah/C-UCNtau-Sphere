@@ -60,7 +60,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt) {
             double zOff = zOffDipCalc(t - settlingTime);
             
             if(checkDagHit(predX, 0.0, predZ, zOff)) {
-                res.times[nHit] = t;
+                res.times[nHit] = t - settlingTime;
                 res.ePerps[nHit] = state[4]*state[4]/(2*MASS_N);
                 nHit += 1;
                 if(nHit >= NRECORDS) {
@@ -152,7 +152,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
         t = t + dt;
         if(t - settlingTime > deathTime) {
             res.energy = energy;
-            res.t = t;
+            res.t = t - settlingTime;
             res.ePerp = state[4]*state[4]/(2*MASS_N);
             res.x = state[0];
             res.y = state[1];
@@ -175,7 +175,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
                 nHit += 1;
                 if(absorbMultilayer(state[4]*state[4]/(2*MASS_N), 4.6)) {
                     res.energy = energy;
-                    res.t = t;
+                    res.t = t - settlingTime;
                     res.ePerp = state[4]*state[4]/(2*MASS_N);
                     res.x = predX;
                     res.y = 0.0;
