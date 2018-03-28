@@ -25,8 +25,15 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt) {
     double t = 0;
     potential(&state[0], &state[1], &state[2], &(res.energy), &t);
     res.energy = res.energy - MINU + (state[3]*state[3] + state[4]*state[4] + state[5]*state[5])/(2*MASS_N);
+    
+    double settlingTime;
+    do {
+        settlingTime = -70*log(nextU01());
+    } while(settlingTime >= 150);
+    
+    settlingTime = settlingTime + CLEANINGTIME;
 
-    int numSteps = SETTLINGTIME/dt;
+    int numSteps = settlingTime/dt;
     double energy;
     for(int i = 0; i < numSteps; i++) {
         symplecticStep(state, dt, energy, t);
@@ -50,7 +57,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt) {
             double predX = prevState[0] + fracTravel * (state[0] - prevState[0]);
             double predZ = prevState[2] + fracTravel * (state[2] - prevState[2]);
             
-            double zOff = zOffDipCalc(t - SETTLINGTIME);
+            double zOff = zOffDipCalc(t - settlingTime);
             
             if(checkDagHit(predX, 0.0, predZ, zOff)) {
                 res.times[nHit] = t;
@@ -104,6 +111,15 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
     
     double deathTime = -877.7*log(nextU01());
     
+    double settlingTime;
+    do {
+        settlingTime = -70*log(nextU01());
+    } while(settlingTime >= 150);
+    
+    settlingTime = settlingTime + CLEANINGTIME;
+    
+    res.settlingT = settlingTime;
+    
     if(deathTime < FIRSTDIPTIME) {
         res.energy = res.eStart;
         res.t = t;
@@ -119,7 +135,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
         return res;
     }
     
-    int numSteps = SETTLINGTIME/dt;
+    int numSteps = settlingTime/dt;
     double energy;
     for(int i = 0; i < numSteps; i++) {
         symplecticStep(state, dt, energy, t);
@@ -134,7 +150,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
         prevState = state;
         symplecticStep(state, dt, energy, t);
         t = t + dt;
-        if(t - SETTLINGTIME > deathTime) {
+        if(t - settlingTime > deathTime) {
             res.energy = energy;
             res.t = t;
             res.ePerp = state[4]*state[4]/(2*MASS_N);
@@ -153,7 +169,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
             double predX = prevState[0] + fracTravel * (state[0] - prevState[0]);
             double predZ = prevState[2] + fracTravel * (state[2] - prevState[2]);
             
-            double zOff = zOffDipCalc(t - SETTLINGTIME);
+            double zOff = zOffDipCalc(t - settlingTime);
             
             if(checkDagHit(predX, 0.0, predZ, zOff)) {
                 nHit += 1;

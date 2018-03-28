@@ -15,6 +15,7 @@ typedef struct fixedResult {
     double energy;
     double theta;
     double t;
+    double settlingT;
     double ePerp;
     double x;
     double y;

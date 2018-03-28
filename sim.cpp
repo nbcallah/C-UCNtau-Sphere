@@ -34,7 +34,7 @@ extern "C" {
 } fixedResult;*/
 
 void writeFixedRes(std::ofstream &binfile, fixedResult res) {
-    const size_t buff_len = sizeof(unsigned int) + 8*sizeof(double) + 3*sizeof(int) + 2*sizeof(double) + sizeof(unsigned int);
+    const size_t buff_len = sizeof(unsigned int) + 9*sizeof(double) + 3*sizeof(int) + 2*sizeof(double) + sizeof(unsigned int);
     char buf[buff_len];
     if(!binfile.is_open()) {
         fprintf(stderr, "Error! file closed\n");
@@ -44,17 +44,18 @@ void writeFixedRes(std::ofstream &binfile, fixedResult res) {
     *((double *)(&buf[0] + sizeof(unsigned int))) = res.energy;
     *((double *)(&buf[0] + sizeof(unsigned int) + 1*sizeof(double))) = res.theta;
     *((double *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(double))) = res.t;
-    *((double *)(&buf[0] + sizeof(unsigned int) + 3*sizeof(double))) = res.ePerp;
-    *((double *)(&buf[0] + sizeof(unsigned int) + 4*sizeof(double))) = res.x;
-    *((double *)(&buf[0] + sizeof(unsigned int) + 5*sizeof(double))) = res.y;
-    *((double *)(&buf[0] + sizeof(unsigned int) + 6*sizeof(double))) = res.z;
-    *((double *)(&buf[0] + sizeof(unsigned int) + 7*sizeof(double))) = res.zOff;
-    *((int *)(&buf[0] + sizeof(unsigned int) + 8*sizeof(double))) = res.nHit;
-    *((int *)(&buf[0] + sizeof(unsigned int) + 8*sizeof(double) + 1*sizeof(int))) = res.nHitHouseLow;
-    *((int *)(&buf[0] + sizeof(unsigned int) + 8*sizeof(double) + 2*sizeof(int))) = res.nHitHouseHigh;
-    *((double *)(&buf[0] + sizeof(unsigned int) + 8*sizeof(double) + 3*sizeof(int))) = res.eStart;
-    *((double *)(&buf[0] + sizeof(unsigned int) + 8*sizeof(double) + 3*sizeof(int) + 1*sizeof(double))) = res.deathTime;
-    *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 8*sizeof(double) + 3*sizeof(int) + 2*sizeof(double))) = buff_len - 2*sizeof(unsigned int);
+    *((double *)(&buf[0] + sizeof(unsigned int) + 3*sizeof(double))) = res.settlingT;
+    *((double *)(&buf[0] + sizeof(unsigned int) + 4*sizeof(double))) = res.ePerp;
+    *((double *)(&buf[0] + sizeof(unsigned int) + 5*sizeof(double))) = res.x;
+    *((double *)(&buf[0] + sizeof(unsigned int) + 6*sizeof(double))) = res.y;
+    *((double *)(&buf[0] + sizeof(unsigned int) + 7*sizeof(double))) = res.z;
+    *((double *)(&buf[0] + sizeof(unsigned int) + 8*sizeof(double))) = res.zOff;
+    *((int *)(&buf[0] + sizeof(unsigned int) + 9*sizeof(double))) = res.nHit;
+    *((int *)(&buf[0] + sizeof(unsigned int) + 9*sizeof(double) + 1*sizeof(int))) = res.nHitHouseLow;
+    *((int *)(&buf[0] + sizeof(unsigned int) + 9*sizeof(double) + 2*sizeof(int))) = res.nHitHouseHigh;
+    *((double *)(&buf[0] + sizeof(unsigned int) + 9*sizeof(double) + 3*sizeof(int))) = res.eStart;
+    *((double *)(&buf[0] + sizeof(unsigned int) + 9*sizeof(double) + 3*sizeof(int) + 1*sizeof(double))) = res.deathTime;
+    *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 9*sizeof(double) + 3*sizeof(int) + 2*sizeof(double))) = buff_len - 2*sizeof(unsigned int);
     binfile.write(buf, buff_len);
 }
 
