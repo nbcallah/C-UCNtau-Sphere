@@ -102,3 +102,57 @@ std::vector<double> randomPointTrapOptimum() {
     
     return state;
 }
+
+std::vector<double> randomPointTrapOptimumCleanable() {
+    std::vector<double> state(6);
+    double maxEnergy = GRAV*MASS_N*0.45;
+    double maxP = sqrt(2*MASS_N*maxEnergy);
+    
+    double t = 0.0;    
+    
+    double energy;
+    while(true) {
+        energy = maxEnergy * nextU01();
+        if(energy < 5.875/JTONEV) {
+            continue;
+        }
+        if(nextU01() < pow(energy/maxEnergy, 1.21666666)) {
+            break;
+        }
+    }
+    
+    double totalU;
+    do {
+        state[2] = -1.464413669130002;
+        state[0] = nextU01()*0.15 - 0.075;
+        state[1] = nextU01()*0.15 - 0.075;
+        potential(&state[0], &state[1], &state[2], &totalU, &t);
+        totalU = totalU - MINU;
+    } while(totalU >= energy);
+    
+    double targetP = sqrt(2.0*MASS_N*(energy - totalU));
+    
+    double theta;
+    while(true) {
+        double u1 = nextU01();
+        theta = asin(sqrt(u1));
+        if(nextU01() < pow(cos(theta), 0.25)) {
+            break;
+        }
+    }
+    
+    double u2 = nextU01();
+    double phi = 2 * M_PI * u2;
+    
+    state[3] = sin(theta)*cos(phi);
+    state[4] = sin(theta)*sin(phi);
+    state[5] = cos(theta);
+    
+    double pLen = sqrt(state[3]*state[3] + state[4]*state[4] + state[5]*state[5]);
+    
+    state[3] = (targetP/pLen)*state[3];
+    state[4] = (targetP/pLen)*state[4];
+    state[5] = (targetP/pLen)*state[5];
+    
+    return state;
+}

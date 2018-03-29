@@ -120,32 +120,47 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
     
     res.settlingT = settlingTime;
     
-    if(deathTime < FIRSTDIPTIME) {
-        res.energy = res.eStart;
-        res.t = t;
-        res.ePerp = state[4]*state[4]/(2*MASS_N);
-        res.x = state[0];
-        res.y = state[1];
-        res.z = state[2];
-        res.zOff = -1;
-        res.nHit = 0;
-        res.nHitHouseLow = 0;
-        res.nHitHouseHigh = 0;
-        res.deathTime = deathTime;
-        return res;
-    }
-    
+//    if(deathTime < FIRSTDIPTIME) {
+//        res.energy = res.eStart;
+//        res.t = t;
+//        res.ePerp = state[4]*state[4]/(2*MASS_N);
+//        res.x = state[0];
+//        res.y = state[1];
+//        res.z = state[2];
+//        res.zOff = -1;
+//        res.nHit = 0;
+//        res.nHitHouseLow = 0;
+//        res.nHitHouseHigh = 0;
+//        res.deathTime = deathTime;
+//        return res;
+//    }
+
+    std::vector<double> prevState(6);
     int numSteps = settlingTime/dt;
     double energy;
     for(int i = 0; i < numSteps; i++) {
+        prevState = state;
         symplecticStep(state, dt, energy, t);
+        if((prevState[2] < -1.5+0.38 && state[2] > -1.5+0.38 && state[1] > 0) || (prevState[2] > -1.5+0.38 && state[2] < -1.5+0.38 && state[1] > 0)) { //cleaned
+            res.energy = energy;
+            res.t = t - settlingTime;
+            res.ePerp = state[5]*state[5]/(2*MASS_N);
+            res.x = state[0];
+            res.y = state[1];
+            res.z = -1.5+0.38;
+            res.zOff = -2;
+            res.nHit = 0;
+            res.nHitHouseLow = 0;
+            res.nHitHouseHigh = 0;
+            res.deathTime = deathTime;
+            return res;
+        }
         t = t + dt;
     }
     
     int nHit = 0;
     int nHitHouseLow = 0;
     int nHitHouseHigh = 0;
-    std::vector<double> prevState(6);
     while(true) {
         prevState = state;
         symplecticStep(state, dt, energy, t);
@@ -164,6 +179,34 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
             res.deathTime = deathTime;
             return res;
         }
+        if((prevState[2] < -1.5+0.38+0.05 && state[2] > -1.5+0.38+0.05 && state[1] > 0) || (prevState[2] > -1.5+0.38+0.05 && state[2] < -1.5+0.38+0.05 && state[1] > 0)) { //cleaned
+            res.energy = energy;
+            res.t = t - settlingTime;
+            res.ePerp = state[5]*state[5]/(2*MASS_N);
+            res.x = state[0];
+            res.y = state[1];
+            res.z = -1.5+0.38+0.05;
+            res.zOff = -3;
+            res.nHit = nHit;
+            res.nHitHouseLow = nHitHouseLow;
+            res.nHitHouseHigh = nHitHouseHigh;
+            res.deathTime = deathTime;
+            return res;
+        }
+        if(isnan(energy)) {
+            res.energy = energy;
+            res.t = t - settlingTime;
+            res.ePerp = 0.0;
+            res.x = state[0];
+            res.y = state[1];
+            res.z = state[2];
+            res.zOff = -4;
+            res.nHit = nHit;
+            res.nHitHouseLow = nHitHouseLow;
+            res.nHitHouseHigh = nHitHouseHigh;
+            res.deathTime = deathTime;
+            return res;
+        }
         if((prevState[1] < 0 && state[1] > 0) || (prevState[1] > 0 && state[1] < 0)) {
             double fracTravel = fabs(prevState[1])/(fabs(state[1]) + fabs(prevState[1]));
             double predX = prevState[0] + fracTravel * (state[0] - prevState[0]);
@@ -173,7 +216,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
             
             if(checkDagHit(predX, 0.0, predZ, zOff)) {
                 nHit += 1;
-                if(absorbMultilayer(state[4]*state[4]/(2*MASS_N), 4.6)) {
+                if(absorbMultilayer(state[4]*state[4]/(2*MASS_N), 4.66666666)) {
                     res.energy = energy;
                     res.t = t - settlingTime;
                     res.ePerp = state[4]*state[4]/(2*MASS_N);

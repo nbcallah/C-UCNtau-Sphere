@@ -5,5 +5,6 @@
 
 std::vector<double> randomPointTrapOptimum();
 std::vector<double> randomPointTrapEdE();
+std::vector<double> randomPointTrapOptimumCleanable();
 
 #endif /* TRACK_GEN_H */
