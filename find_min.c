@@ -63,6 +63,9 @@ int main (void) {
         printf("%.15e\n", gsl_min_fminimizer_f_minimum(s));
     }
     while (status == GSL_CONTINUE && iter < max_iter);
+    
+    printf("CLEAN_LOW: %.15e\n", fn1(-1.5+0.38, NULL) - gsl_min_fminimizer_f_minimum(s));
+    printf("CLEAN_HIGH: %.15e\n", fn1(-1.5+0.38+0.05, NULL) - gsl_min_fminimizer_f_minimum(s));
 
     gsl_min_fminimizer_free (s);
 

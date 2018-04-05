@@ -15,7 +15,7 @@ extern "C" {
     #include "../inc/xorshift.h"
 }
 
-noabsResult daggerHitTimes(std::vector<double> state, double dt) {
+noabsResult daggerHitTimes(std::vector<double> state, double dt, trace tr) {
     std::vector<double> tang = {0.0, 0.0, 1.0};
     std::vector<double> normPlus = {0.0, 1.0, 0.0};
     std::vector<double> normMinus = {0.0, -1.0, 0.0};
@@ -23,7 +23,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt) {
     res.theta = acos(state[5]/sqrt(state[3]*state[3] + state[4]*state[4] + state[5]*state[5]));
 
     double t = 0;
-    potential(&state[0], &state[1], &state[2], &(res.energy), &t);
+    potential(&state[0], &state[1], &state[2], &(res.energy), &t, &tr);
     res.energy = res.energy - MINU + (state[3]*state[3] + state[4]*state[4] + state[5]*state[5])/(2*MASS_N);
     
     double settlingTime;
@@ -36,7 +36,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt) {
     int numSteps = settlingTime/dt;
     double energy;
     for(int i = 0; i < numSteps; i++) {
-        symplecticStep(state, dt, energy, t);
+        symplecticStep(state, dt, energy, t, tr);
         t = t + dt;
     }
     
@@ -46,7 +46,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt) {
     std::vector<double> prevState(6);
     while(true) {
         prevState = state;
-        symplecticStep(state, dt, energy, t);
+        symplecticStep(state, dt, energy, t, tr);
         t = t + dt;
         if(t >= 3000.0) {
             break;
@@ -99,14 +99,14 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt) {
     return res;
 }
 
-fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
+fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt, trace tr) {
     std::vector<double> tang = {0.0, 0.0, 1.0};
     std::vector<double> normPlus = {0.0, 1.0, 0.0};
     std::vector<double> normMinus = {0.0, -1.0, 0.0};
     fixedResult res;
     res.theta = acos(state[5]/sqrt(state[3]*state[3] + state[4]*state[4] + state[5]*state[5]));
     double t = 0;
-    potential(&state[0], &state[1], &state[2], &(res.eStart), &t);
+    potential(&state[0], &state[1], &state[2], &(res.eStart), &t, &tr);
     res.eStart = res.eStart - MINU + (state[3]*state[3] + state[4]*state[4] + state[5]*state[5])/(2*MASS_N);
     
     double deathTime = -877.7*log(nextU01());
@@ -140,7 +140,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
     double energy;
     for(int i = 0; i < numSteps; i++) {
         prevState = state;
-        symplecticStep(state, dt, energy, t);
+        symplecticStep(state, dt, energy, t, tr);
         if((prevState[2] < -1.5+0.38 && state[2] > -1.5+0.38 && state[1] > 0) || (prevState[2] > -1.5+0.38 && state[2] < -1.5+0.38 && state[1] > 0)) { //cleaned
             res.energy = energy;
             res.t = t - settlingTime;
@@ -163,7 +163,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt) {
     int nHitHouseHigh = 0;
     while(true) {
         prevState = state;
-        symplecticStep(state, dt, energy, t);
+        symplecticStep(state, dt, energy, t, tr);
         t = t + dt;
         if(t - settlingTime > deathTime) {
             res.energy = energy;

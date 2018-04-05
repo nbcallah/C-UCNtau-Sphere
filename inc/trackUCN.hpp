@@ -2,6 +2,11 @@
 #define TRACKUCN_H
 
 #include <vector>
+
+extern "C" {
+    #include "../inc/fields_nate.h"
+}
+
 #define NRECORDS 50
 
 typedef struct noabsResult {
@@ -28,7 +33,7 @@ typedef struct fixedResult {
     double deathTime;
 } fixedResult;
 
-fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt);
-noabsResult daggerHitTimes(std::vector<double> state, double dt);
+fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt, trace tr);
+noabsResult daggerHitTimes(std::vector<double> state, double dt, trace tr);
 
 #endif /* TRACKUCN_H */

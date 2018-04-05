@@ -9,7 +9,7 @@ extern "C" {
     #include "../inc/fields_nate.h"
 }
 
-std::vector<double> randomPointTrapEdE() {
+std::vector<double> randomPointTrapEdE(trace tr) {
     std::vector<double> state(6);
     double maxEnergy = GRAV*MASS_N*0.3444;
     double maxP = sqrt(2*MASS_N*maxEnergy);
@@ -32,7 +32,7 @@ std::vector<double> randomPointTrapEdE() {
         state[2] = -1.464413669130002;
         state[0] = nextU01()*0.15 - 0.075;
         state[1] = nextU01()*0.15 - 0.075;
-        potential(&state[0], &state[1], &state[2], &totalU, &t);
+        potential(&state[0], &state[1], &state[2], &totalU, &t, &tr);
         totalU = totalU - MINU;
     } while(totalU >= energy);
     
@@ -56,7 +56,7 @@ std::vector<double> randomPointTrapEdE() {
     return state;
 }
 
-std::vector<double> randomPointTrapOptimum() {
+std::vector<double> randomPointTrapOptimum(trace tr) {
     std::vector<double> state(6);
     double maxEnergy = GRAV*MASS_N*0.3444;
     double maxP = sqrt(2*MASS_N*maxEnergy);
@@ -79,7 +79,7 @@ std::vector<double> randomPointTrapOptimum() {
         state[2] = -1.464413669130002;
         state[0] = nextU01()*0.15 - 0.075;
         state[1] = nextU01()*0.15 - 0.075;
-        potential(&state[0], &state[1], &state[2], &totalU, &t);
+        potential(&state[0], &state[1], &state[2], &totalU, &t, &tr);
         totalU = totalU - MINU;
     } while(totalU >= energy);
     
@@ -103,7 +103,7 @@ std::vector<double> randomPointTrapOptimum() {
     return state;
 }
 
-std::vector<double> randomPointTrapOptimumCleanable() {
+std::vector<double> randomPointTrapOptimumCleanable(trace tr) {
     std::vector<double> state(6);
     double maxEnergy = GRAV*MASS_N*0.45;
     double maxP = sqrt(2*MASS_N*maxEnergy);
@@ -126,7 +126,7 @@ std::vector<double> randomPointTrapOptimumCleanable() {
         state[2] = -1.464413669130002;
         state[0] = nextU01()*0.15 - 0.075;
         state[1] = nextU01()*0.15 - 0.075;
-        potential(&state[0], &state[1], &state[2], &totalU, &t);
+        potential(&state[0], &state[1], &state[2], &totalU, &t, &tr);
         totalU = totalU - MINU;
     } while(totalU >= energy);
     

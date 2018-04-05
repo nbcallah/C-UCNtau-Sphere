@@ -2,9 +2,12 @@
 #define TRACK_GEN_H
 
 #include <vector>
+extern "C" {
+    #include "../inc/fields_nate.h"
+}
 
-std::vector<double> randomPointTrapOptimum();
-std::vector<double> randomPointTrapEdE();
-std::vector<double> randomPointTrapOptimumCleanable();
+std::vector<double> randomPointTrapOptimum(trace tr);
+std::vector<double> randomPointTrapEdE(trace tr);
+std::vector<double> randomPointTrapOptimumCleanable(trace tr);
 
 #endif /* TRACK_GEN_H */

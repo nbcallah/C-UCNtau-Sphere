@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "inc/track_gen.hpp"
 #include "inc/trackUCN.hpp"
+#include "inc/fields_nate.h"
 #include <cmath>
 #include <mpi.h>
 #include <iostream>
@@ -75,6 +76,75 @@ void writeNoabsRes(std::ofstream &binfile, noabsResult res) {
     binfile.write(buf, buff_len);
 }
 
+trace readTrace(const char *xfile, const char *yfile, const char *zfile) {
+    trace t;
+    t.x = NULL;
+    t.y = NULL;
+    t.z = NULL;
+    t.num = -1;
+    
+    const size_t buff_len = 1*8;
+    char* buf = new char[buff_len];
+    
+    std::ifstream binfileX(xfile, std::ios::in | std::ios::binary);
+    std::ifstream binfileY(yfile, std::ios::in | std::ios::binary);
+    std::ifstream binfileZ(zfile, std::ios::in | std::ios::binary);
+    if(!binfileX.is_open() || !binfileY.is_open() || !binfileZ.is_open()) {
+        fprintf(stderr, "Error! Could not open files!\n");
+        return t;
+    }
+    
+    std::vector<double> x;
+    std::vector<double> y;
+    std::vector<double> z;
+    
+    while(!binfileX.eof()) {
+        binfileX.read(buf, buff_len);
+        if(binfileX.eof()) { //Breaks on last read of file (i.e. when 0 bytes are read and EOF bit is set)
+            break;
+        }
+        x.push_back(*(double *)&buf[0]);
+    }
+    binfileX.close();
+    
+    while(!binfileY.eof()) {
+        binfileY.read(buf, buff_len);
+        if(binfileY.eof()) { //Breaks on last read of file (i.e. when 0 bytes are read and EOF bit is set)
+            break;
+        }
+        y.push_back(*(double *)&buf[0]);
+    }
+    binfileY.close();
+    
+    while(!binfileZ.eof()) {
+        binfileZ.read(buf, buff_len);
+        if(binfileZ.eof()) { //Breaks on last read of file (i.e. when 0 bytes are read and EOF bit is set)
+            break;
+        }
+        z.push_back(*(double *)&buf[0]);
+    }
+    binfileZ.close();
+    
+    if(z.size() != x.size() || z.size() != y.size()) {
+        fprintf(stderr, "Error! Sample length mismatch!\n");
+        return t;
+    }
+    
+    t.x = new double[x.size()];
+    t.y = new double[y.size()];
+    t.z = new double[z.size()];
+    
+    for(int i = 0; i < x.size(); i++) {
+        t.x[i] = x[i];
+        t.y[i] = y[i];
+        t.z[i] = z[i];
+    }
+    
+    t.num = x.size();
+    
+    return t;
+}
+
 int main(int argc, char** argv) {
     int ierr = MPI_Init(&argc, &argv);
     int nproc;
@@ -133,6 +203,14 @@ int main(int argc, char** argv) {
         exit(1);
     }
     
+//    trace tr = readTrace("./xvals.bin", "./yvals.bin", "./zvals.bin");
+    trace tr = readTrace(XFNAME, YFNAME, ZFNAME);
+    if(tr.x == NULL || tr.y == NULL || tr.z == NULL) {
+        fprintf(stderr, "Bad trace\n");
+        return 2;
+    }
+    printf("num trace bins: %d\n", tr.num);
+    
     char fNameRank[1024];
     snprintf(fNameRank, 1024, "%s%d", fName, rank);
     std::ofstream binfile(fNameRank, std::ios::out | std::ios::binary);
@@ -146,10 +224,10 @@ int main(int argc, char** argv) {
     traj.reserve(nTraj/nproc);
     for(int i = 0; i < nTraj; i++) {
         if(i >= rank*(nTraj/nproc) && i < (rank+1)*(nTraj/nproc)) {
-            traj.push_back(TRACKGENERATOR());
+            traj.push_back(TRACKGENERATOR(tr));
         }
         else {
-            TRACKGENERATOR();
+            TRACKGENERATOR(tr);
         }
     }
     
@@ -158,7 +236,7 @@ int main(int argc, char** argv) {
     }
         
     for(auto it = traj.begin(); it < traj.end(); it++) {
-        auto res = TRACKER(*it, dt);
+        auto res = TRACKER(*it, dt, tr);
 //        writeFixedRes(binfile, res);
         WRITER(binfile, res);
     }

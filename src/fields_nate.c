@@ -22,7 +22,19 @@
 //#define AMPLITUDE 0.000001
 #define KAPPA 1000
 
-void force(double *x_in, double *y_in, double *z_in, double *fx, double *fy, double *fz, double *totalU, double* t) //analytical form of halbach field force, mu*del(mod(B))
+void shift(double *x, double *y, double *z, double t, trace* tr) {
+    int iLow = (int)(t/SAMPDT);
+    double frac = (t - iLow*SAMPDT)/(SAMPDT);
+    int iHi = iLow + 1;
+    iLow = iLow % tr->num;
+    iHi = iHi % tr->num;
+
+    *x = *x + tr->x[iLow] + frac*(tr->x[iHi] - tr->x[iLow]);
+    *y = *y + tr->y[iLow] + frac*(tr->y[iHi] - tr->y[iLow]);
+    *z = *z + tr->z[iLow] + frac*(tr->z[iHi] - tr->z[iLow]);
+}
+
+void force(double *x_in, double *y_in, double *z_in, double *fx, double *fy, double *fz, double *totalU, double* t, trace* tr) //analytical form of halbach field force, mu*del(mod(B))
 {
 //    printf("%f %f %e\n", *t, *freq, AMPLITUDE * sin(2*M_PI * FREQ * (*t)));
 //    printf("%e\n", *x_in);
@@ -32,12 +44,13 @@ void force(double *x_in, double *y_in, double *z_in, double *fx, double *fy, dou
     double x = *x_in;
     double y = *y_in;
     double z = *z_in;
+    shift(&x, &y, &z, *t, tr);
     double z_grav = *z_in;
 
     double gx=0.0, gy=0.0, gz=0.0, R, r, Rprime, rprime;
     
-    R = 0.5 + 0.5/(1 + exp(-KAPPA*x)) + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
-    r = 1.0 - 0.5/(1 + exp(-KAPPA*x)) + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
+    R = 0.5 + 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
+    r = 1.0 - 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
     Rprime = 0.5*KAPPA*(1.0 - 1.0/(1 + exp(-KAPPA*x)))*1.0/(1 + exp(-KAPPA*x));
     rprime = -Rprime;
 
@@ -157,19 +170,20 @@ void force(double *x_in, double *y_in, double *z_in, double *fx, double *fy, dou
     *fz = gz;
 }
 
-void fieldstrength(double *x_in, double *y_in, double *z_in, double *totalB, double* t)
+void fieldstrength(double *x_in, double *y_in, double *z_in, double *totalB, double* t, trace* tr)
 {
      double A = 4*B_REM/(M_PI*sqrt(2));
 
     double x = *x_in;
     double y = *y_in;
     double z = *z_in;
+    shift(&x, &y, &z, *t, tr);
     double z_grav = *z_in;
 
     double R, r, Rprime, rprime;
     
-    R = 0.5 + 0.5/(1 + exp(-KAPPA*x)) + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
-    r = 1.0 - 0.5/(1 + exp(-KAPPA*x)) + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
+    R = 0.5 + 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
+    r = 1.0 - 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
     Rprime = 0.5*KAPPA*(1.0 - 1.0/(1 + exp(-KAPPA*x)))*1.0/(1 + exp(-KAPPA*x));
     rprime = -Rprime;
 
@@ -217,19 +231,20 @@ void fieldstrength(double *x_in, double *y_in, double *z_in, double *totalB, dou
     }
 }
 
-void potential(double *x_in, double *y_in, double *z_in, double *totalU, double* t) //-mu*mod(B) + g*z. remember that mu is already negative.
+void potential(double *x_in, double *y_in, double *z_in, double *totalU, double* t, trace* tr) //-mu*mod(B) + g*z. remember that mu is already negative.
 {
     double A = 4*B_REM/(M_PI*sqrt(2));
 
     double x = *x_in;
     double y = *y_in;
     double z = *z_in;
+    shift(&x, &y, &z, *t, tr);
     double z_grav = *z_in;
 
     double R, r, Rprime, rprime;
     
-    R = 0.5 + 0.5/(1 + exp(-KAPPA*x)) + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
-    r = 1.0 - 0.5/(1 + exp(-KAPPA*x)) + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
+    R = 0.5 + 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
+    r = 1.0 - 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
     Rprime = 0.5*KAPPA*(1.0 - 1.0/(1 + exp(-KAPPA*x)))*1.0/(1 + exp(-KAPPA*x));
     rprime = -Rprime;
 

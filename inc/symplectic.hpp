@@ -3,6 +3,10 @@
 
 #include <vector>
 
-void symplecticStep(std::vector<double> &state, double deltaT, double &energy, double t);
+extern "C" {
+    #include "../inc/fields_nate.h"
+}
+
+void symplecticStep(std::vector<double> &state, double deltaT, double &energy, double t, trace tr);
 
 #endif /* SYMPLECTIC_H */
