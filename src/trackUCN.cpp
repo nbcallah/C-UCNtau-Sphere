@@ -33,23 +33,40 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt, trace tr) {
     
     settlingTime = settlingTime + CLEANINGTIME;
 
+    std::vector<double> prevState(6);
     int numSteps = settlingTime/dt;
     double energy;
     for(int i = 0; i < numSteps; i++) {
+        prevState = state;
         symplecticStep(state, dt, energy, t, tr);
+        if((prevState[2] < -1.5+0.38 && state[2] > -1.5+0.38 && state[1] > 0) || (prevState[2] > -1.5+0.38 && state[2] < -1.5+0.38 && state[1] > 0)) { //cleaned
+            res.energy = -1.0;
+            return res;
+        }
         t = t + dt;
     }
     
     int nHit = 0;
     int nHitHouseLow = 0;
     int nHitHouseHigh = 0;
-    std::vector<double> prevState(6);
     while(true) {
         prevState = state;
         symplecticStep(state, dt, energy, t, tr);
         t = t + dt;
         if(t >= 3000.0) {
-            break;
+            for(int i = nHit; i < NRECORDS; i++) {
+                res.times[i] = t;
+                res.ePerps[i] = 0.0;
+            }
+            return res;
+        }
+        
+        if((prevState[2] < -1.5+0.38 && state[2] > -1.5+0.38 && state[1] > 0) || (prevState[2] > -1.5+0.38 && state[2] < -1.5+0.38 && state[1] > 0)) { //cleaned
+            for(int i = nHit; i < NRECORDS; i++) {
+                res.times[i] = t;
+                res.ePerps[i] = 0.0;
+            }
+            return res;
         }
 
         if((prevState[1] < 0 && state[1] > 0) || (prevState[1] > 0 && state[1] < 0)) {

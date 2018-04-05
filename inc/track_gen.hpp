@@ -9,5 +9,6 @@ extern "C" {
 std::vector<double> randomPointTrapOptimum(trace tr);
 std::vector<double> randomPointTrapEdE(trace tr);
 std::vector<double> randomPointTrapOptimumCleanable(trace tr);
+std::vector<double> randomPointTrapEdECleanable(trace tr);
 
 #endif /* TRACK_GEN_H */

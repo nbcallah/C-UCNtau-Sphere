@@ -61,6 +61,9 @@ void writeFixedRes(std::ofstream &binfile, fixedResult res) {
 }
 
 void writeNoabsRes(std::ofstream &binfile, noabsResult res) {
+    if(res.energy < 0.0) {
+        return;
+    }
     const size_t buff_len = sizeof(unsigned int) + 2*sizeof(double) + 2*NRECORDS*sizeof(float) + sizeof(unsigned int);
     char buf[buff_len];
     if(!binfile.is_open()) {
