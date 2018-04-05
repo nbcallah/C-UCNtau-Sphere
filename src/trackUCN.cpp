@@ -55,7 +55,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt, trace tr) {
         t = t + dt;
         if(t >= 3000.0) {
             for(int i = nHit; i < NRECORDS; i++) {
-                res.times[i] = t;
+                res.times[i] = t - settlingTime;
                 res.ePerps[i] = 0.0;
             }
             return res;
@@ -63,7 +63,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt, trace tr) {
         
         if((prevState[2] < -1.5+0.38 && state[2] > -1.5+0.38 && state[1] > 0) || (prevState[2] > -1.5+0.38 && state[2] < -1.5+0.38 && state[1] > 0)) { //cleaned
             for(int i = nHit; i < NRECORDS; i++) {
-                res.times[i] = t;
+                res.times[i] = t - settlingTime;
                 res.ePerps[i] = 0.0;
             }
             return res;
