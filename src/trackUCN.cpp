@@ -57,6 +57,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt, trace tr) {
             for(int i = nHit; i < NRECORDS; i++) {
                 res.times[i] = t - settlingTime;
                 res.ePerps[i] = 0.0;
+                res.zetas[i] = 0.0;
             }
             return res;
         }
@@ -65,6 +66,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt, trace tr) {
             for(int i = nHit; i < NRECORDS; i++) {
                 res.times[i] = t - settlingTime;
                 res.ePerps[i] = 0.0;
+                res.zetas[i] = 0.0;
             }
             return res;
         }
@@ -79,6 +81,7 @@ noabsResult daggerHitTimes(std::vector<double> state, double dt, trace tr) {
             if(checkDagHit(predX, 0.0, predZ, zOff)) {
                 res.times[nHit] = t - settlingTime;
                 res.ePerps[nHit] = state[4]*state[4]/(2*MASS_N);
+                res.zetas[nHit] = calcDagZeta(predX, 0.0, predZ, zOff);
                 nHit += 1;
                 if(nHit >= NRECORDS) {
                     break;

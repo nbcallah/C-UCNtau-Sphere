@@ -64,7 +64,7 @@ void writeNoabsRes(std::ofstream &binfile, noabsResult res) {
     if(res.energy < 0.0) {
         return;
     }
-    const size_t buff_len = sizeof(unsigned int) + 2*sizeof(double) + 2*NRECORDS*sizeof(float) + sizeof(unsigned int);
+    const size_t buff_len = sizeof(unsigned int) + 2*sizeof(double) + 3*NRECORDS*sizeof(float) + sizeof(unsigned int);
     char buf[buff_len];
     if(!binfile.is_open()) {
         fprintf(stderr, "Error! file closed\n");
@@ -75,7 +75,8 @@ void writeNoabsRes(std::ofstream &binfile, noabsResult res) {
     *((double *)(&buf[0] + sizeof(unsigned int) + 1*sizeof(double))) = res.theta;
     std::memcpy((void *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(double)), (void *)&(res.times[0]), NRECORDS*sizeof(float));
     std::memcpy((void *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(double) + NRECORDS*sizeof(float)), (void *)&(res.ePerps[0]), NRECORDS*sizeof(float));
-    *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(double) + 2*NRECORDS*sizeof(float))) = buff_len - 2*sizeof(unsigned int);
+    std::memcpy((void *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(double) + 2*NRECORDS*sizeof(float)), (void *)&(res.zetas[0]), NRECORDS*sizeof(float));
+    *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(double) + 3*NRECORDS*sizeof(float))) = buff_len - 2*sizeof(unsigned int);
     binfile.write(buf, buff_len);
 }
 

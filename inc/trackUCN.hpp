@@ -14,6 +14,7 @@ typedef struct noabsResult {
     double theta;
     float times[NRECORDS];
     float ePerps[NRECORDS];
+    float zetas[NRECORDS];
 } noabsResult;
 
 typedef struct fixedResult {

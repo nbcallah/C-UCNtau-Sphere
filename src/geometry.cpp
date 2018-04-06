@@ -90,6 +90,17 @@ bool checkDagHit(double x, double y, double z, double zOff) {
     return false;
 }
 
+double calcDagZeta(double x, double y, double z, double zOff) {
+    double zeta;
+    if(x > 0) {
+        zeta = 0.5 - sqrt(x*x + pow(fabs(z - zOff) - 1.0, 2));
+    }
+    else {
+        zeta = 1.0 - sqrt(x*x + pow(fabs(z - zOff) - 0.5, 2));
+    }
+    return zeta;
+}
+
 bool checkHouseHitLow(double x, double y, double z, double zOff) {
     if(z >= (-1.5 + zOff + 0.2) && z < (-1.5 + zOff + 0.2 + 0.14478) && fabs(x + 0.1524) < (0.40 + 2.0179*(z + 1.5 - zOff - 0.2))/2.0) {
         return true;
