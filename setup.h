@@ -2,14 +2,14 @@
 
 //#define TRACKGENERATOR randomPointTrapEdE
 //#define TRACKGENERATOR randomPointTrapOptimum
-//#define TRACKGENERATOR randomPointTrapOptimumCleanable
-#define TRACKGENERATOR randomPointTrapEdECleanable
+#define TRACKGENERATOR randomPointTrapOptimumCleanable
+//#define TRACKGENERATOR randomPointTrapEdECleanable
 
-#define TRACKER daggerHitTimes
-//#define TRACKER fixedEffDaggerHitTime
+//#define TRACKER daggerHitTimes
+#define TRACKER fixedEffDaggerHitTime
 
-#define WRITER writeNoabsRes
-//#define WRITER writeFixedRes
+//#define WRITER writeNoabsRes
+#define WRITER writeFixedRes
 
 #define CLEANINGTIME 200
 
