@@ -66,10 +66,10 @@ std::vector<double> randomPointTrapOptimum(trace tr) {
     double energy;
     while(true) {
         energy = maxEnergy * nextU01();
-        if(energy < 11.641026/JTONEV) {
+        if(energy < 7.6071/JTONEV) {
             continue;
         }
-        if(nextU01() < pow(energy/maxEnergy, 1.076923)) {
+        if(nextU01() < pow(energy/maxEnergy, 1.30448)) {
             break;
         }
     }
@@ -85,9 +85,16 @@ std::vector<double> randomPointTrapOptimum(trace tr) {
     
     double targetP = sqrt(2.0*MASS_N*(energy - totalU));
     
-    double u1 = nextU01();
+    double theta;
+    while(true) {
+        double u1 = nextU01();
+        theta = asin(sqrt(u1));
+        if(nextU01() < pow(cos(theta), 0.264079)) {
+            break;
+        }
+    }
+    
     double u2 = nextU01();
-    double theta = asin(sqrt(u1));
     double phi = 2 * M_PI * u2;
     
     state[3] = sin(theta)*cos(phi);
@@ -113,10 +120,10 @@ std::vector<double> randomPointTrapOptimumCleanable(trace tr) {
     double energy;
     while(true) {
         energy = maxEnergy * nextU01();
-        if(energy < 5.875/JTONEV) {
+        if(energy < 7.6071/JTONEV) {
             continue;
         }
-        if(nextU01() < pow(energy/maxEnergy, 1.21666666)) {
+        if(nextU01() < pow(energy/maxEnergy, 1.30448)) {
             break;
         }
     }
@@ -136,7 +143,7 @@ std::vector<double> randomPointTrapOptimumCleanable(trace tr) {
     while(true) {
         double u1 = nextU01();
         theta = asin(sqrt(u1));
-        if(nextU01() < pow(cos(theta), 0.25)) {
+        if(nextU01() < pow(cos(theta), 0.264079)) {
             break;
         }
     }

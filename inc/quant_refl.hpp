@@ -44,6 +44,6 @@ std::vector<std::complex<double>> m(std::complex<double> kn, std::complex<double
 
 double absorbProbQuantOxide(double ePerp, double thickBoron);
 
-bool absorbMultilayer(double ePerp, double thickBoron);
+bool absorbMultilayer(double ePerp, double thickBoron, double x, double y, double z, double zOff);
 
 #endif /* QUANT_REFL_H */

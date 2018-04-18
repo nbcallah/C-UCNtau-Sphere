@@ -236,7 +236,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt, trace tr
             
             if(checkDagHit(predX, 0.0, predZ, zOff)) {
                 nHit += 1;
-                if(absorbMultilayer(state[4]*state[4]/(2*MASS_N), 4.66666666)) {
+                if(absorbMultilayer(state[4]*state[4]/(2*MASS_N), 5.76556, predX, 0.0, predZ, zOff)) {
                     res.energy = energy;
                     res.t = t - settlingTime;
                     res.ePerp = state[4]*state[4]/(2*MASS_N);

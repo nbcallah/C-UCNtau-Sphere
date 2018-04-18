@@ -59,9 +59,17 @@ double absorbProbQuantOxide(double ePerp, double thickBoron) {
     return 1.0 - (std::conj(-mbar[2]/mbar[3])*-mbar[2]/mbar[3]).real();
 }
 
-bool absorbMultilayer(double ePerp, double thickBoron) {
+bool absorbMultilayer(double ePerp, double thickBoron, double x, double y, double z, double zOff) {
+    double zeta;
+    if(x > 0) {
+        zeta = 0.5 - sqrt(x*x + pow(fabs(z - zOff) - 1.0, 2));
+    }
+    else {
+        zeta = 1.0 - sqrt(x*x + pow(fabs(z - zOff) - 0.5, 2));
+    }
+    double boronProb = zeta > 0.0160763 ? 1 : zeta/0.0160763;
     double u = nextU01();
-    if(u < absorbProbQuantOxide(ePerp, thickBoron)) {
+    if(u < boronProb*absorbProbQuantOxide(ePerp, thickBoron)) {
         return true;
     }
     return false; 
