@@ -34,7 +34,18 @@ typedef struct fixedResult {
     double deathTime;
 } fixedResult;
 
+typedef struct cleanResult {
+    float energy;
+    float theta;
+    float t;
+    float x;
+    float y;
+    float z;
+    int code;
+} cleanResult;
+
 fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt, trace tr);
+cleanResult cleanTime(std::vector<double> state, double dt, trace tr);
 noabsResult daggerHitTimes(std::vector<double> state, double dt, trace tr);
 
 #endif /* TRACKUCN_H */

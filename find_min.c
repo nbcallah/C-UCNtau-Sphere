@@ -71,8 +71,10 @@ int main (void) {
     }
     while (status == GSL_CONTINUE && iter < max_iter);
     
+    printf("CLEAN_EXTRA_LOW: %.15e\n", fn1(-1.5+0.35, NULL) - gsl_min_fminimizer_f_minimum(s));
     printf("CLEAN_LOW: %.15e\n", fn1(-1.5+0.38, NULL) - gsl_min_fminimizer_f_minimum(s));
     printf("CLEAN_HIGH: %.15e\n", fn1(-1.5+0.38+0.05, NULL) - gsl_min_fminimizer_f_minimum(s));
+    printf("TRAP_HEIGHT: %.15e\n", fn1(-1.01, NULL) - gsl_min_fminimizer_f_minimum(s));
 
     gsl_min_fminimizer_free (s);
 

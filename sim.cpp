@@ -80,6 +80,25 @@ void writeNoabsRes(std::ofstream &binfile, noabsResult res) {
     binfile.write(buf, buff_len);
 }
 
+void writeCleanRes(std::ofstream &binfile, cleanResult res) {
+    const size_t buff_len = sizeof(unsigned int) + 6*sizeof(float) + 1*sizeof(int) + sizeof(unsigned int);
+    char buf[buff_len];
+    if(!binfile.is_open()) {
+        fprintf(stderr, "Error! file closed\n");
+        return;
+    }
+    *((unsigned int *)(&buf[0])) = buff_len - 2*sizeof(unsigned int);
+    *((float *)(&buf[0] + sizeof(unsigned int))) = res.energy;
+    *((float *)(&buf[0] + sizeof(unsigned int) + 1*sizeof(float))) = res.theta;
+    *((float *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(float))) = res.t;
+    *((float *)(&buf[0] + sizeof(unsigned int) + 3*sizeof(float))) = res.x;
+    *((float *)(&buf[0] + sizeof(unsigned int) + 4*sizeof(float))) = res.y;
+    *((float *)(&buf[0] + sizeof(unsigned int) + 5*sizeof(float))) = res.z;
+    *((int *)(&buf[0] + sizeof(unsigned int) + 6*sizeof(float))) = res.code;
+    *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 6*sizeof(double) + 1*sizeof(int))) = buff_len - 2*sizeof(unsigned int);
+    binfile.write(buf, buff_len);
+}
+
 trace readTrace(const char *xfile, const char *yfile, const char *zfile) {
     trace t;
     t.x = NULL;

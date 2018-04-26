@@ -1,15 +1,18 @@
-#define INITBLOCK 7
+#define INITBLOCK 0
 
 //#define TRACKGENERATOR randomPointTrapEdE
 //#define TRACKGENERATOR randomPointTrapOptimum
-#define TRACKGENERATOR randomPointTrapOptimumCleanable
+//#define TRACKGENERATOR randomPointTrapOptimumCleanable
 //#define TRACKGENERATOR randomPointTrapEdECleanable
+#define TRACKGENERATOR randomPointTrapOptimumOnlyCleanable
 
 //#define TRACKER daggerHitTimes
-#define TRACKER fixedEffDaggerHitTime
+//#define TRACKER fixedEffDaggerHitTime
+#define TRACKER cleanTime
 
 //#define WRITER writeNoabsRes
-#define WRITER writeFixedRes
+//#define WRITER writeFixedRes
+#define WRITER writeCleanRes
 
 #define CLEANINGTIME 200
 
@@ -36,11 +39,11 @@
 #define HEIGHTS {0.49, 0.38, 0.25, 0.18, 0.14, 0.11, 0.08, 0.06, 0.04, 0.01}
 #define ENDTIMES {holdT, holdT+40.0, holdT+80, holdT+100, holdT+120, holdT+140, holdT+160, holdT+180, holdT+200.0, holdT+500.0}
 
-#define XFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/xvals.bin"
-#define YFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/yvals.bin"
-#define ZFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/zvals.bin"
-//#define XFNAME "./xvals.bin"
-//#define YFNAME "./yvals.bin"
-//#define ZFNAME "./zvals.bin"
-//#define AMPLITUDE 0.00002
-//#define FREQ 60.0
+
+#define HEATMULT 0.0
+//#define XFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/xvals.bin"
+//#define YFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/yvals.bin"
+//#define ZFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/zvals.bin"
+#define XFNAME "./xvals.bin"
+#define YFNAME "./yvals.bin"
+#define ZFNAME "./zvals.bin"

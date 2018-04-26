@@ -167,7 +167,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt, trace tr
             res.ePerp = state[5]*state[5]/(2*MASS_N);
             res.x = state[0];
             res.y = state[1];
-            res.z = -1.5+0.38;
+            res.z = state[2];
             res.zOff = -2;
             res.nHit = 0;
             res.nHitHouseLow = 0;
@@ -205,7 +205,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt, trace tr
             res.ePerp = state[5]*state[5]/(2*MASS_N);
             res.x = state[0];
             res.y = state[1];
-            res.z = -1.5+0.38+0.05;
+            res.z = state[2];
             res.zOff = -3;
             res.nHit = nHit;
             res.nHitHouseLow = nHitHouseLow;
@@ -270,6 +270,119 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt, trace tr
             }
             else if(checkHouseHitHigh(predX, 0.0, predZ, zOff)) {
                 nHitHouseHigh += 1;
+                if(prevState[1] > 0 && prevState[4] < 0) {
+                    reflect(prevState, normPlus, tang);
+                }
+                else {
+                    reflect(prevState, normMinus, tang);
+                }
+                state = prevState;
+            }
+        }
+    }
+}
+
+cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
+    std::vector<double> tang = {0.0, 0.0, 1.0};
+    std::vector<double> normPlus = {0.0, 1.0, 0.0};
+    std::vector<double> normMinus = {0.0, -1.0, 0.0};
+    cleanResult res;
+    res.theta = acos(state[5]/sqrt(state[3]*state[3] + state[4]*state[4] + state[5]*state[5]));
+    double t = 0;
+    
+    double deathTime = -877.7*log(nextU01());
+    
+    double settlingTime;
+    do {
+        settlingTime = -70*log(nextU01());
+    } while(settlingTime >= 150);
+    
+    settlingTime = settlingTime + CLEANINGTIME;
+
+    std::vector<double> prevState(6);
+    int numSteps = settlingTime/dt;
+    double energy;
+    for(int i = 0; i < numSteps; i++) {
+        prevState = state;
+        symplecticStep(state, dt, energy, t, tr);
+        if((prevState[2] < -1.5+0.38 && state[2] > -1.5+0.38 && state[1] > 0) || (prevState[2] > -1.5+0.38 && state[2] < -1.5+0.38 && state[1] > 0)) { //cleaned
+            res.energy = energy;
+            res.t = t;
+            res.x = state[0];
+            res.y = state[1];
+            res.z = state[2];
+            res.code = -2;
+            return res;
+        }
+        t = t + dt;
+    }
+    
+    while(true) {
+        prevState = state;
+        symplecticStep(state, dt, energy, t, tr);
+        t = t + dt;
+        if(t - settlingTime > deathTime) {
+            res.energy = energy;
+            res.t = t-settlingTime;
+            res.x = state[0];
+            res.y = state[1];
+            res.z = state[2];
+            res.code = -1;
+            return res;
+        }
+        if((prevState[2] < -1.5+0.38+0.05 && state[2] > -1.5+0.38+0.05 && state[1] > 0) || (prevState[2] > -1.5+0.38+0.05 && state[2] < -1.5+0.38+0.05 && state[1] > 0)) { //cleaned
+            res.energy = energy;
+            res.t = t-settlingTime;
+            res.x = state[0];
+            res.y = state[1];
+            res.z = state[2];
+            res.code = -3;
+            return res;
+        }
+        if(isnan(energy)) {
+            res.energy = energy;
+            res.t = t-settlingTime;
+            res.x = state[0];
+            res.y = state[1];
+            res.z = state[2];
+            res.code = -4;
+            return res;
+        }
+        if((prevState[1] < 0 && state[1] > 0) || (prevState[1] > 0 && state[1] < 0)) {
+            double fracTravel = fabs(prevState[1])/(fabs(state[1]) + fabs(prevState[1]));
+            double predX = prevState[0] + fracTravel * (state[0] - prevState[0]);
+            double predZ = prevState[2] + fracTravel * (state[2] - prevState[2]);
+            
+            double zOff = zOffDipCalc(t - settlingTime);
+            
+            if(checkDagHit(predX, 0.0, predZ, zOff)) {
+                if(absorbMultilayer(state[4]*state[4]/(2*MASS_N), 5.76556, predX, 0.0, predZ, zOff)) {
+                    res.energy = energy;
+                    res.t = t-settlingTime;
+                    res.x = state[0];
+                    res.y = state[1];
+                    res.z = state[2];
+                    res.code = 0;
+                    return res;
+                }
+                if(prevState[1] > 0 && prevState[4] < 0) {
+                    reflect(prevState, normPlus, tang);
+                }
+                else {
+                    reflect(prevState, normMinus, tang);
+                }
+                state = prevState;
+            }
+            else if(checkHouseHitLow(predX, 0.0, predZ, zOff)) {
+                if(prevState[1] > 0 && prevState[4] < 0) {
+                    reflect(prevState, normPlus, tang);
+                }
+                else {
+                    reflect(prevState, normMinus, tang);
+                }
+                state = prevState;
+            }
+            else if(checkHouseHitHigh(predX, 0.0, predZ, zOff)) {
                 if(prevState[1] > 0 && prevState[4] < 0) {
                     reflect(prevState, normPlus, tang);
                 }
