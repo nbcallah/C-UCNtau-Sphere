@@ -29,9 +29,9 @@ void shift(double *x, double *y, double *z, double t, trace* tr) {
     iLow = iLow % tr->num;
     iHi = iHi % tr->num;
 
-    *x = *x + tr->x[iLow] + frac*(tr->x[iHi] - tr->x[iLow]);
-    *y = *y + tr->y[iLow] + frac*(tr->y[iHi] - tr->y[iLow]);
-    *z = *z + tr->z[iLow] + frac*(tr->z[iHi] - tr->z[iLow]);
+    *x = *x + HEATMULT*(tr->x[iLow] + frac*(tr->x[iHi] - tr->x[iLow]));
+    *y = *y + HEATMULT*(tr->y[iLow] + frac*(tr->y[iHi] - tr->y[iLow]));
+    *z = *z + HEATMULT*(tr->z[iLow] + frac*(tr->z[iHi] - tr->z[iLow]));
 }
 
 void force(double *x_in, double *y_in, double *z_in, double *fx, double *fy, double *fz, double *totalU, double* t, trace* tr) //analytical form of halbach field force, mu*del(mod(B))

@@ -5,6 +5,8 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_min.h>
 
+trace tr;
+
 double fn1 (double z_in, void * params) {
     (void)(params); /* avoid unused parameter warning */
     double x, y, z, fx, fy, fz, u, t, freq;
@@ -12,11 +14,16 @@ double fn1 (double z_in, void * params) {
     y = 0.0;
     z = z_in;
     t = 0.0;
-    force(&x, &y, &z, &fx, &fy, &fz, &u, &t);
+    force(&x, &y, &z, &fx, &fy, &fz, &u, &t, &tr);
     return u;
 }
 
 int main (void) {
+    tr.num = 1;
+    double zero = 0.0;
+    tr.x = &zero;
+    tr.y = &zero;
+    tr.z = &zero;
     int status;
     int iter = 0, max_iter = 100;
     const gsl_min_fminimizer_type *T;
