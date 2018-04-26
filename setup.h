@@ -15,6 +15,8 @@
 #define WRITER writeCleanRes
 
 #define CLEANINGTIME 50
+#define CLEANINGHEIGHT 35
+#define RAISEDCLEANINGHEIGHT 43
 
 #define FIRSTDIPTIME 20
 

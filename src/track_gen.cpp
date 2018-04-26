@@ -221,8 +221,8 @@ std::vector<double> randomPointTrapOptimumOnlyCleanable(trace tr) {
     double energy;
     while(true) {
         energy = maxEnergy * nextU01();
-//        if(energy < 5.077298660340679e-27) { //Extra Low Clean
-        if(energy < 5.571749397933261e-27) {
+        if(energy < 5.077298660340679e-27) { //Extra Low Clean
+//        if(energy < 5.571749397933261e-27) {
             continue;
         }
         if(nextU01() < pow(energy/maxEnergy, 1.30448)) {

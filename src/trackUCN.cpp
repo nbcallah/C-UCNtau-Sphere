@@ -305,7 +305,7 @@ cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
     for(int i = 0; i < numSteps; i++) {
         prevState = state;
         symplecticStep(state, dt, energy, t, tr);
-        if((prevState[2] < -1.5+0.38 && state[2] > -1.5+0.38 && state[1] > 0) || (prevState[2] > -1.5+0.38 && state[2] < -1.5+0.38 && state[1] > 0)) { //cleaned
+        if((prevState[2] < -1.5+CLEANINGHEIGHT && state[2] > -1.5+CLEANINGHEIGHT && state[1] > 0) || (prevState[2] > -1.5+CLEANINGHEIGHT && state[2] < -1.5+CLEANINGHEIGHT && state[1] > 0)) { //cleaned
             res.energy = energy;
             res.t = t;
             res.x = state[0];
@@ -330,7 +330,7 @@ cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
             res.code = -1;
             return res;
         }
-        if((prevState[2] < -1.5+0.38+0.05 && state[2] > -1.5+0.38+0.05 && state[1] > 0) || (prevState[2] > -1.5+0.38+0.05 && state[2] < -1.5+0.38+0.05 && state[1] > 0)) { //cleaned
+        if((prevState[2] < -1.5+RAISEDCLEANINGHEIGHT && state[2] > -1.5+RAISEDCLEANINGHEIGHT && state[1] > 0) || (prevState[2] > -1.5+RAISEDCLEANINGHEIGHT && state[2] < -1.5+RAISEDCLEANINGHEIGHT && state[1] > 0)) { //cleaned
             res.energy = energy;
             res.t = t-settlingTime;
             res.x = state[0];
