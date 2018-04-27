@@ -95,7 +95,7 @@ void writeCleanRes(std::ofstream &binfile, cleanResult res) {
     *((float *)(&buf[0] + sizeof(unsigned int) + 4*sizeof(float))) = res.y;
     *((float *)(&buf[0] + sizeof(unsigned int) + 5*sizeof(float))) = res.z;
     *((int *)(&buf[0] + sizeof(unsigned int) + 6*sizeof(float))) = res.code;
-    *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 6*sizeof(double) + 1*sizeof(int))) = buff_len - 2*sizeof(unsigned int);
+    *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 6*sizeof(float) + 1*sizeof(int))) = buff_len - 2*sizeof(unsigned int);
     binfile.write(buf, buff_len);
 }
 
