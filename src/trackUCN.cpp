@@ -236,7 +236,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt, trace tr
             
             if(checkDagHit(predX, 0.0, predZ, zOff)) {
                 nHit += 1;
-                if(absorbMultilayer(state[4]*state[4]/(2*MASS_N), 5.76556, predX, 0.0, predZ, zOff)) {
+                if(absorbMultilayer(state[4]*state[4]/(2*MASS_N), BTHICK, predX, 0.0, predZ, zOff)) {
                     res.energy = energy;
                     res.t = t - settlingTime;
                     res.ePerp = state[4]*state[4]/(2*MASS_N);
@@ -290,7 +290,7 @@ cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
     res.theta = acos(state[5]/sqrt(state[3]*state[3] + state[4]*state[4] + state[5]*state[5]));
     double t = 0;
     
-    double deathTime = -877.7*log(nextU01());
+//    double deathTime = -877.7*log(nextU01());
     
     double settlingTime;
     do {
@@ -321,15 +321,15 @@ cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
         prevState = state;
         symplecticStep(state, dt, energy, t, tr);
         t = t + dt;
-        if(t - settlingTime > deathTime) {
-            res.energy = energy;
-            res.t = t-settlingTime;
-            res.x = state[0];
-            res.y = state[1];
-            res.z = state[2];
-            res.code = -1;
-            return res;
-        }
+//        if(t - settlingTime > deathTime) {
+//            res.energy = energy;
+//            res.t = t-settlingTime;
+//            res.x = state[0];
+//            res.y = state[1];
+//            res.z = state[2];
+//            res.code = -1;
+//            return res;
+//        }
         if((prevState[2] < -1.5+RAISEDCLEANINGHEIGHT && state[2] > -1.5+RAISEDCLEANINGHEIGHT && state[1] > 0) || (prevState[2] > -1.5+RAISEDCLEANINGHEIGHT && state[2] < -1.5+RAISEDCLEANINGHEIGHT && state[1] > 0)) { //cleaned
             res.energy = energy;
             res.t = t-settlingTime;
@@ -356,7 +356,7 @@ cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
             double zOff = zOffDipCalc(t - settlingTime);
             
             if(checkDagHit(predX, 0.0, predZ, zOff)) {
-                if(absorbMultilayer(state[4]*state[4]/(2*MASS_N), 5.76556, predX, 0.0, predZ, zOff)) {
+                if(absorbMultilayer(state[4]*state[4]/(2*MASS_N), BTHICK, predX, 0.0, predZ, zOff)) {
                     res.energy = energy;
                     res.t = t-settlingTime;
                     res.x = state[0];

@@ -3,6 +3,7 @@
 #include <cmath>
 #include "../inc/constants.h"
 #include "../inc/track_gen.hpp"
+#include "../setup.h"
 
 extern "C" {
     #include "../inc/xorshift.h"
@@ -66,10 +67,10 @@ std::vector<double> randomPointTrapOptimum(trace tr) {
     double energy;
     while(true) {
         energy = maxEnergy * nextU01();
-        if(energy < 7.6071/JTONEV) {
+        if(energy < ECUT/JTONEV) {
             continue;
         }
-        if(nextU01() < pow(energy/maxEnergy, 1.30448)) {
+        if(nextU01() < pow(energy/maxEnergy, EPOW)) {
             break;
         }
     }
@@ -89,7 +90,7 @@ std::vector<double> randomPointTrapOptimum(trace tr) {
     while(true) {
         double u1 = nextU01();
         theta = asin(sqrt(u1));
-        if(nextU01() < pow(cos(theta), 0.264079)) {
+        if(nextU01() < pow(cos(theta), THETAPOW)) {
             break;
         }
     }
@@ -120,10 +121,10 @@ std::vector<double> randomPointTrapOptimumCleanable(trace tr) {
     double energy;
     while(true) {
         energy = maxEnergy * nextU01();
-        if(energy < 7.6071/JTONEV) {
+        if(energy < ECUT/JTONEV) {
             continue;
         }
-        if(nextU01() < pow(energy/maxEnergy, 1.30448)) {
+        if(nextU01() < pow(energy/maxEnergy, EPOW)) {
             break;
         }
     }
@@ -143,7 +144,7 @@ std::vector<double> randomPointTrapOptimumCleanable(trace tr) {
     while(true) {
         double u1 = nextU01();
         theta = asin(sqrt(u1));
-        if(nextU01() < pow(cos(theta), 0.264079)) {
+        if(nextU01() < pow(cos(theta), THETAPOW)) {
             break;
         }
     }
@@ -221,11 +222,10 @@ std::vector<double> randomPointTrapOptimumOnlyCleanable(trace tr) {
     double energy;
     while(true) {
         energy = maxEnergy * nextU01();
-        if(energy < 5.077298660340679e-27) { //Extra Low Clean
-//        if(energy < 5.571749397933261e-27) {
+        if(energy < ECLEAN) {
             continue;
         }
-        if(nextU01() < pow(energy/maxEnergy, 1.30448)) {
+        if(nextU01() < pow(energy/maxEnergy, EPOW)) {
             break;
         }
     }
@@ -245,7 +245,7 @@ std::vector<double> randomPointTrapOptimumOnlyCleanable(trace tr) {
     while(true) {
         double u1 = nextU01();
         theta = asin(sqrt(u1));
-        if(nextU01() < pow(cos(theta), 0.264079)) {
+        if(nextU01() < pow(cos(theta), THETAPOW)) {
             break;
         }
     }

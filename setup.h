@@ -6,6 +6,12 @@
 //#define TRACKGENERATOR randomPointTrapEdECleanable
 #define TRACKGENERATOR randomPointTrapOptimumOnlyCleanable
 
+#define ECUT 7.6071
+#define EPOW 1.30448
+#define THETAPOW 0.264079
+#define ZETACUT 0.0160763
+#define BTHICK 5.76556
+
 //#define TRACKER daggerHitTimes
 //#define TRACKER fixedEffDaggerHitTime
 #define TRACKER cleanTime
@@ -15,8 +21,11 @@
 #define WRITER writeCleanRes
 
 #define CLEANINGTIME 50
-#define CLEANINGHEIGHT 35
-#define RAISEDCLEANINGHEIGHT 43
+#define CLEANINGHEIGHT 0.38
+//#define CLEANINGHEIGHT 0.35
+#define RAISEDCLEANINGHEIGHT 0.43
+//#define ECLEAN 5.077298660340679e-27
+#define ECLEAN 5.571749397933261e-27
 
 #define FIRSTDIPTIME 20
 
@@ -43,9 +52,9 @@
 
 
 #define HEATMULT 0.0
-#define XFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/xvals.bin"
-#define YFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/yvals.bin"
-#define ZFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/zvals.bin"
-//#define XFNAME "./xvals.bin"
-//#define YFNAME "./yvals.bin"
-//#define ZFNAME "./zvals.bin"
+//#define XFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/xvals.bin"
+//#define YFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/yvals.bin"
+//#define ZFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/zvals.bin"
+#define XFNAME "./xvals.bin"
+#define YFNAME "./yvals.bin"
+#define ZFNAME "./zvals.bin"

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <complex>
 #include <assert.h>
+#include "../setup.h"
 
 extern "C" {
     #include "../inc/xorshift.h"
@@ -67,7 +68,7 @@ bool absorbMultilayer(double ePerp, double thickBoron, double x, double y, doubl
     else {
         zeta = 1.0 - sqrt(x*x + pow(fabs(z - zOff) - 0.5, 2));
     }
-    double boronProb = zeta > 0.0160763 ? 1 : zeta/0.0160763;
+    double boronProb = zeta > ZETACUT ? 1 : zeta/ZETACUT;
     double u = nextU01();
     if(u < boronProb*absorbProbQuantOxide(ePerp, thickBoron)) {
         return true;
