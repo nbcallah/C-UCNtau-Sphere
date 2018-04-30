@@ -305,17 +305,26 @@ cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
     for(int i = 0; i < numSteps; i++) {
         prevState = state;
         symplecticStep(state, dt, energy, t, tr);
-        if((prevState[2] < -1.5+CLEANINGHEIGHT && state[2] > -1.5+CLEANINGHEIGHT && state[1] > 0) || (prevState[2] > -1.5+CLEANINGHEIGHT && state[2] < -1.5+CLEANINGHEIGHT && state[1] > 0)) { //cleaned
+        int code = checkClean(state, prevState, CLEANINGHEIGHT);
+        if(code != 0) { //cleaned
             res.energy = energy;
-            res.t = t;
+            res.t = t-settlingTime;
             res.x = state[0];
             res.y = state[1];
             res.z = state[2];
-            res.code = -2;
+            res.code = code==1 ? -2 : -5;
             return res;
         }
         t = t + dt;
     }
+    
+    res.energy = energy;
+    res.t = t-settlingTime;
+    res.x = state[0];
+    res.y = state[1];
+    res.z = state[2];
+    res.code = -1;
+    return res;
     
     while(true) {
         prevState = state;
@@ -330,13 +339,14 @@ cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
 //            res.code = -1;
 //            return res;
 //        }
-        if((prevState[2] < -1.5+RAISEDCLEANINGHEIGHT && state[2] > -1.5+RAISEDCLEANINGHEIGHT && state[1] > 0) || (prevState[2] > -1.5+RAISEDCLEANINGHEIGHT && state[2] < -1.5+RAISEDCLEANINGHEIGHT && state[1] > 0)) { //cleaned
+        int code = checkClean(state, prevState, RAISEDCLEANINGHEIGHT);
+        if(code != 0) { //cleaned
             res.energy = energy;
             res.t = t-settlingTime;
             res.x = state[0];
             res.y = state[1];
             res.z = state[2];
-            res.code = -3;
+            res.code = code==1 ? -3 : -6;
             return res;
         }
         if(isnan(energy)) {

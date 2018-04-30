@@ -11,6 +11,8 @@ void reflect(std::vector<double> &state, std::vector<double> norm, std::vector<d
 
 bool checkDagHit(double x, double y, double z, double zOff);
 
+int checkClean(std::vector<double> state, std::vector<double> prevState, double cleanHeight);
+
 double calcDagZeta(double x, double y, double z, double zOff);
 
 bool checkHouseHitLow(double x, double y, double z, double zOff);

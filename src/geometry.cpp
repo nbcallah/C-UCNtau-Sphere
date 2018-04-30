@@ -90,6 +90,18 @@ bool checkDagHit(double x, double y, double z, double zOff) {
     return false;
 }
 
+int checkClean(std::vector<double> state, std::vector<double> prevState, double cleanHeight) {
+    if((prevState[2] < -1.5 + cleanHeight && state[2] > -1.5 + cleanHeight) || (prevState[2] > -1.5 + cleanHeight && state[2] < -1.5 + cleanHeight)) {
+        if(state[1] > 0) {
+            return 1;
+        }
+        if(state[1] > -(0.218041/2 + 0.335121 + 0.3556) && state[1] < -(0.218041/2 + 0.335121) && state[0] > (0.115529/2 + 0.212841 - 0.6604) && state[0] < (0.115529/2 + 0.212841)) {
+            return 2;
+        }
+    }
+    return 0;
+}
+
 double calcDagZeta(double x, double y, double z, double zOff) {
     double zeta;
     if(x > 0) {
