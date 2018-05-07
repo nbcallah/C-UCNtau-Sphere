@@ -286,6 +286,9 @@ cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
     std::vector<double> tang = {0.0, 0.0, 1.0};
     std::vector<double> normPlus = {0.0, 1.0, 0.0};
     std::vector<double> normMinus = {0.0, -1.0, 0.0};
+    std::vector<double> normZPlus = {0.0, 0.0, 1.0};
+    std::vector<double> normZMinus = {0.0, 0.0, -1.0};
+    std::vector<double> cleanTang = {0.0, 1.0, 0.0};
     cleanResult res;
     res.theta = acos(state[5]/sqrt(state[3]*state[3] + state[4]*state[4] + state[5]*state[5]));
     double t = 0;
@@ -306,14 +309,51 @@ cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
         prevState = state;
         symplecticStep(state, dt, energy, t, tr);
         int code = checkClean(state, prevState, CLEANINGHEIGHT);
-        if(code != 0) { //cleaned
-            res.energy = energy;
-            res.t = t-settlingTime;
-            res.x = state[0];
-            res.y = state[1];
-            res.z = state[2];
-            res.code = code==1 ? -2 : -5;
-            return res;
+        if(code == 1) {
+            if(nextU01() < 0.75) {
+                res.energy = energy;
+                res.t = t-settlingTime;
+                res.x = state[0];
+                res.y = state[1];
+                res.z = state[2];
+                res.code = -2;
+                return res;
+            }
+            else {
+                if(state[2] > -1.5 + CLEANINGHEIGHT && prevState[2] < -1.5 + CLEANINGHEIGHT) { //moving up
+                    reflect(prevState, normZMinus, cleanTang);
+                }
+                else if(state[2] < -1.5 + CLEANINGHEIGHT && prevState[2] > -1.5 + CLEANINGHEIGHT) {
+                    reflect(prevState, normZPlus, cleanTang);
+                }
+                else {
+                    printf("Boo!\n");
+                }
+                state = prevState;
+            }
+        }
+        if(code == 2) {
+            if(nextU01() < 0.2) {
+                res.energy = energy;
+                res.t = t-settlingTime;
+                res.x = state[0];
+                res.y = state[1];
+                res.z = state[2];
+                res.code = -5;
+                return res;
+            }
+            else {
+                if(state[2] > -1.5 + CLEANINGHEIGHT && prevState[2] < -1.5 + CLEANINGHEIGHT) { //moving up
+                    reflect(prevState, normZMinus, cleanTang);
+                }
+                else if(state[2] < -1.5 + CLEANINGHEIGHT && prevState[2] > -1.5 + CLEANINGHEIGHT) {
+                    reflect(prevState, normZPlus, cleanTang);
+                }
+                else {
+                    printf("Boo!\n");
+                }
+                state = prevState;
+            }
         }
         t = t + dt;
     }
@@ -340,14 +380,50 @@ cleanResult cleanTime(std::vector<double> state, double dt, trace tr){
 //            return res;
 //        }
         int code = checkClean(state, prevState, RAISEDCLEANINGHEIGHT);
-        if(code != 0) { //cleaned
-            res.energy = energy;
-            res.t = t-settlingTime;
-            res.x = state[0];
-            res.y = state[1];
-            res.z = state[2];
-            res.code = code==1 ? -3 : -6;
-            return res;
+        if(code == 1) {
+            if(nextU01() < 0.75) {
+                res.energy = energy;
+                res.t = t-settlingTime;
+                res.x = state[0];
+                res.y = state[1];
+                res.z = state[2];
+                res.code = -3;
+                return res;
+            }
+            else {
+                if(state[2] > -1.5 + RAISEDCLEANINGHEIGHT && prevState[2] < -1.5 + RAISEDCLEANINGHEIGHT) { //moving up
+                    reflect(prevState, normZMinus, cleanTang);
+                }
+                else if(state[2] < -1.5 + RAISEDCLEANINGHEIGHT && prevState[2] > -1.5 + RAISEDCLEANINGHEIGHT) {
+                    reflect(prevState, normZPlus, cleanTang);
+                }
+                else {
+                    printf("Boo!\n");
+                }
+                state = prevState;
+            }
+        }
+        if(code == 2) {
+            if(nextU01() < 0.2) {
+                res.energy = energy;
+                res.t = t-settlingTime;
+                res.x = state[0];
+                res.y = state[1];
+                res.z = state[2];
+                res.code = -6;
+                return res;
+            }
+            else {
+                if(state[2] > -1.5 + RAISEDCLEANINGHEIGHT && prevState[2] < -1.5 + RAISEDCLEANINGHEIGHT) { //moving up
+                    reflect(prevState, normZMinus, cleanTang);
+                }
+                else if(state[2] < -1.5 + RAISEDCLEANINGHEIGHT && prevState[2] > -1.5 + RAISEDCLEANINGHEIGHT) {
+                    reflect(prevState, normZPlus, cleanTang);
+                }
+                else {
+                }
+                state = prevState;
+            }
         }
         if(isnan(energy)) {
             res.energy = energy;
