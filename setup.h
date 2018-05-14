@@ -14,11 +14,13 @@
 
 //#define TRACKER daggerHitTimes
 //#define TRACKER fixedEffDaggerHitTime
-#define TRACKER cleanTime
+//#define TRACKER cleanTime
+#define TRACKER calcLyap
 
 //#define WRITER writeNoabsRes
 //#define WRITER writeFixedRes
-#define WRITER writeCleanRes
+//#define WRITER writeCleanRes
+#define WRITER writeLyapRes
 
 #define CLEANINGTIME 50
 #define CLEANINGHEIGHT 0.38

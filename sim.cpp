@@ -3,6 +3,7 @@
 #include "inc/track_gen.hpp"
 #include "inc/trackUCN.hpp"
 #include "inc/fields_nate.h"
+#include "inc/lyap.hpp"
 #include <cmath>
 #include <mpi.h>
 #include <iostream>
@@ -96,6 +97,22 @@ void writeCleanRes(std::ofstream &binfile, cleanResult res) {
     *((float *)(&buf[0] + sizeof(unsigned int) + 5*sizeof(float))) = res.z;
     *((int *)(&buf[0] + sizeof(unsigned int) + 6*sizeof(float))) = res.code;
     *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 6*sizeof(float) + 1*sizeof(int))) = buff_len - 2*sizeof(unsigned int);
+    binfile.write(buf, buff_len);
+}
+
+void writeLyapRes(std::ofstream &binfile, lyapResult res) {
+    const size_t buff_len = sizeof(unsigned int) + 4*sizeof(float) + sizeof(unsigned int);
+    char buf[buff_len];
+    if(!binfile.is_open()) {
+        fprintf(stderr, "Error! file closed\n");
+        return;
+    }
+    *((unsigned int *)(&buf[0])) = buff_len - 2*sizeof(unsigned int);
+    *((float *)(&buf[0] + sizeof(unsigned int))) = res.eStart;
+    *((float *)(&buf[0] + sizeof(unsigned int) + 1*sizeof(float))) = res.eEnd;
+    *((float *)(&buf[0] + sizeof(unsigned int) + 2*sizeof(float))) = res.theta;
+    *((float *)(&buf[0] + sizeof(unsigned int) + 3*sizeof(float))) = res.lce;
+    *((unsigned int *)(&buf[0] + sizeof(unsigned int) + 4*sizeof(float))) = buff_len - 2*sizeof(unsigned int);
     binfile.write(buf, buff_len);
 }
 
@@ -259,6 +276,8 @@ int main(int argc, char** argv) {
     }
         
     for(auto it = traj.begin(); it < traj.end(); it++) {
+//        double lyap = calcLyap(*it, dt, tr, 0.0);
+//        printf("%f\n", lyap);
         auto res = TRACKER(*it, dt, tr);
 //        writeFixedRes(binfile, res);
         WRITER(binfile, res);
