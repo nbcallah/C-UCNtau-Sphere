@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <vector>
+#include <assert.h>
 #include "../setup.h"
 #include "../inc/constants.h"
 #include "../inc/geometry.hpp"

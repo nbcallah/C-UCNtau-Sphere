@@ -46,6 +46,5 @@ lyapResult calcLyap(std::vector<double> ref, double dt, trace tr, double tStart)
     double lce = (1.0/(NUMSEP*LYAPTIME))*sumDist;
     res.lce = lce;
     res.eEnd = energy;
-    fflush(stdout);
     return res;
 }
