@@ -10,3 +10,8 @@
 #define EPSILON 1.0e-9
 
 #define MINU -2.390352484438862e-26
+
+#define XSCALE 0.2
+#define YSCALE 0.35
+#define ZSCALE 1.34
+#define PSCALE 1.25e-27

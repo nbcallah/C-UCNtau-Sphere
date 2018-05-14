@@ -58,3 +58,6 @@
 #define XFNAME "./xvals.bin"
 #define YFNAME "./yvals.bin"
 #define ZFNAME "./zvals.bin"
+
+#define LYAPTIME 5
+#define NUMSEP 100

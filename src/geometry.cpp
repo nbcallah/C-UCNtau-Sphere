@@ -2,6 +2,8 @@
 #include <cmath>
 #include <vector>
 #include "../setup.h"
+#include "../inc/constants.h"
+#include "../inc/geometry.hpp"
 
 extern "C" {
     #include "../inc/xorshift.h"
@@ -13,6 +15,14 @@ std::vector<double> cross(std::vector<double> a, std::vector<double> b) {
     res[1] = a[0]*b[2]-a[2]*b[0];
     res[2] = a[0]*b[1]-a[1]*b[0];
     return res;
+}
+
+void normalize(std::vector<double> &a) {
+    assert(a.size()==3);
+    double len = sqrt(a[0]*a[0] + a[1]*a[1] + a[2]*a[2]);
+    a[0] = a[0]/len;
+    a[1] = a[1]/len;
+    a[2] = a[2]/len;
 }
 
 double zOffDipCalc(double t) {
@@ -125,4 +135,72 @@ bool checkHouseHitHigh(double x, double y, double z, double zOff) {
         return true;
     }
     return false;
+}
+
+std::vector<double> initializeLyapState(std::vector<double> ref) {
+    double lenP = sqrt(ref[3]*ref[3] + ref[4]*ref[4] + ref[5]*ref[5]);
+    
+    std::vector<double> pair(6);
+    std::vector<double> randomP(3);
+    std::vector<double> paraP(3);
+    
+    randomP[0] = nextU01();
+    randomP[1] = nextU01();
+    randomP[2] = nextU01();
+    
+    paraP[0] = ref[3];
+    paraP[1] = ref[4];
+    paraP[2] = ref[5];
+    
+    normalize(randomP);
+    normalize(paraP);
+    
+    std::vector<double> perpP = cross(paraP, randomP);
+    
+    normalize(perpP);
+        
+    double alpha = EPSILON*EPSILON*PSCALE*PSCALE/(lenP*2);
+    double beta = sqrt(EPSILON*EPSILON*PSCALE*PSCALE - (EPSILON*EPSILON*PSCALE*PSCALE/(2*lenP))*(EPSILON*EPSILON*PSCALE*PSCALE/(2*lenP)));
+    
+    pair[0] = ref[0];
+    pair[1] = ref[1];
+    pair[2] = ref[2];
+    
+    pair[3] = ref[3] - alpha*paraP[0] + beta*perpP[0];
+    pair[4] = ref[4] - alpha*paraP[1] + beta*perpP[1];
+    pair[5] = ref[5] - alpha*paraP[2] + beta*perpP[2];
+    
+    return pair;
+}
+
+void resetStates(std::vector<double> ref, std::vector<double> &pair) {
+    std::vector<double> dist(6);
+    dist[0] = pair[0]-ref[0];
+    dist[1] = pair[1]-ref[1];
+    dist[2] = pair[2]-ref[2];
+    dist[3] = pair[3]-ref[3];
+    dist[4] = pair[4]-ref[4];
+    dist[5] = pair[5]-ref[5];
+    
+    double scaling = EPSILON/distance(ref, pair);
+    
+    pair[0] = ref[0] + scaling*dist[0];
+    pair[1] = ref[1] + scaling*dist[1];
+    pair[2] = ref[2] + scaling*dist[2];
+    pair[3] = ref[3] + scaling*dist[3];
+    pair[4] = ref[4] + scaling*dist[4];
+    pair[5] = ref[5] + scaling*dist[5];
+}
+
+double distance(std::vector<double> ref, std::vector<double> pair) {
+    double dist = 0;
+    dist += (pair[0]-ref[0])*(pair[0]-ref[0])/(XSCALE*XSCALE);
+    dist += (pair[1]-ref[1])*(pair[1]-ref[1])/(YSCALE*YSCALE);
+    dist += (pair[2]-ref[2])*(pair[2]-ref[2])/(ZSCALE*ZSCALE);
+    dist += (pair[3]-ref[3])*(pair[3]-ref[3])/(PSCALE*PSCALE);
+    dist += (pair[4]-ref[4])*(pair[4]-ref[4])/(PSCALE*PSCALE);
+    dist += (pair[5]-ref[5])*(pair[5]-ref[5])/(PSCALE*PSCALE);
+    
+    dist = sqrt(dist);
+    return dist;
 }

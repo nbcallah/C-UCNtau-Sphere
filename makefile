@@ -40,11 +40,14 @@ bin/track_gen.o: src/track_gen.cpp inc/track_gen.hpp
 bin/trackUCN.o: src/trackUCN.cpp inc/trackUCN.hpp
 	$(CPP) $(CPPFLAGS) -c -o bin/trackUCN.o src/trackUCN.cpp
 
+bin/lyap.o: src/lyap.cpp inc/lyap.hpp
+	$(CPP) $(CPPFLAGS) -c -o bin/lyap.o src/lyap.cpp
+
 bin/sim.o: sim.cpp
 	$(CPP) $(CPPFLAGS) -c -o bin/sim.o sim.cpp
 
-sim: bin/sim.o bin/trackUCN.o bin/track_gen.o bin/geometry.o bin/symplectic.o bin/quant_refl.o bin/xorshift.o bin/fields_nate.o
-	$(CPP) $(LFLAGS) -o sim bin/sim.o bin/trackUCN.o bin/track_gen.o bin/geometry.o bin/symplectic.o bin/quant_refl.o bin/xorshift.o bin/fields_nate.o
+sim: bin/sim.o bin/trackUCN.o bin/track_gen.o bin/geometry.o bin/symplectic.o bin/quant_refl.o bin/xorshift.o bin/fields_nate.o bin/lyap.o
+	$(CPP) $(LFLAGS) -o sim bin/sim.o bin/trackUCN.o bin/track_gen.o bin/geometry.o bin/symplectic.o bin/quant_refl.o bin/xorshift.o bin/fields_nate.o bin/lyap.o
 
 bin/find_min.o: find_min.c
 	$(CC) $(CFLAGS) -c find_min.c -o bin/find_min.o
