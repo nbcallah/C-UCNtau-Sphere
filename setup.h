@@ -55,12 +55,12 @@
 
 
 #define HEATMULT 0.0
-//#define XFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/xvals.bin"
-//#define YFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/yvals.bin"
-//#define ZFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/zvals.bin"
-#define XFNAME "./xvals.bin"
-#define YFNAME "./yvals.bin"
-#define ZFNAME "./zvals.bin"
+#define XFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/xvals.bin"
+#define YFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/yvals.bin"
+#define ZFNAME "/N/u/nbcallah/BigRed2/ChaoticTrap/C-UCNtau-Trap-Sims/zvals.bin"
+//#define XFNAME "./xvals.bin"
+//#define YFNAME "./yvals.bin"
+//#define ZFNAME "./zvals.bin"
 
 #define LYAPTIME 5
 #define NUMSEP 100
