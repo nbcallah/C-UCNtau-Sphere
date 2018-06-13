@@ -26,8 +26,8 @@ void shift(double *x, double *y, double *z, double t, trace* tr) {
     int iLow = (int)(t/SAMPDT);
     double frac = (t - iLow*SAMPDT)/(SAMPDT);
     int iHi = iLow + 1;
-    iLow = iLow % tr->num;
-    iHi = iHi % tr->num;
+    iLow = (iLow % tr->num + tr->num) % tr->num;
+    iHi = (iHi % tr->num + tr->num) % tr->num;
 
     *x = *x + HEATMULT*(tr->x[iLow] + frac*(tr->x[iHi] - tr->x[iLow]));
     *y = *y + HEATMULT*(tr->y[iLow] + frac*(tr->y[iHi] - tr->y[iLow]));
