@@ -161,7 +161,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt, trace tr
     for(int i = 0; i < numSteps; i++) {
         prevState = state;
         symplecticStep(state, dt, energy, t, tr);
-        if((prevState[2] < -1.5+0.38 && state[2] > -1.5+0.38 && state[1] > 0) || (prevState[2] > -1.5+0.38 && state[2] < -1.5+0.38 && state[1] > 0)) { //cleaned
+        if((prevState[2] < -1.5+CLEANINGHEIGHT && state[2] > -1.5+CLEANINGHEIGHT && state[1] > 0) || (prevState[2] > -1.5+CLEANINGHEIGHT && state[2] < -1.5+CLEANINGHEIGHT && state[1] > 0)) { //cleaned
             res.energy = energy;
             res.t = t - settlingTime;
             res.ePerp = state[5]*state[5]/(2*MASS_N);
@@ -199,7 +199,7 @@ fixedResult fixedEffDaggerHitTime(std::vector<double> state, double dt, trace tr
             res.deathTime = deathTime;
             return res;
         }
-        if((prevState[2] < -1.5+0.38+0.05 && state[2] > -1.5+0.38+0.05 && state[1] > 0) || (prevState[2] > -1.5+0.38+0.05 && state[2] < -1.5+0.38+0.05 && state[1] > 0)) { //cleaned
+        if((prevState[2] < -1.5+RAISEDCLEANINGHEIGHT && state[2] > -1.5+RAISEDCLEANINGHEIGHT && state[1] > 0) || (prevState[2] > -1.5+RAISEDCLEANINGHEIGHT && state[2] < -1.5+RAISEDCLEANINGHEIGHT && state[1] > 0)) { //cleaned
             res.energy = energy;
             res.t = t - settlingTime;
             res.ePerp = state[5]*state[5]/(2*MASS_N);
