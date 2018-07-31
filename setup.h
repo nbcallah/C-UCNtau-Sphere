@@ -2,27 +2,27 @@
 
 //#define TRACKGENERATOR randomPointTrapEdE
 //#define TRACKGENERATOR randomPointTrapOptimum
-#define TRACKGENERATOR randomPointTrapOptimumCleanable
-//#define TRACKGENERATOR randomPointTrapEdECleanable
+//#define TRACKGENERATOR randomPointTrapOptimumCleanable
+#define TRACKGENERATOR randomPointTrapEdECleanable
 //#define TRACKGENERATOR randomPointTrapOptimumOnlyCleanable
 
-//#define ECUT 7.6071
-#define ECUT 34.776124570119975
+#define ECUT 7.6071
+//#define ECUT 34.776124570119975
 #define EPOW 1.30448
 #define THETAPOW 0.264079
 #define ZETACUT 0.0160763
 #define BTHICK 5.76556
 
 //#define TRACKER daggerHitTimes
-#define TRACKER fixedEffDaggerHitTime
+//#define TRACKER fixedEffDaggerHitTime
 //#define TRACKER fixedEffDaggerHitTime_PSE
 //#define TRACKER cleanTime
-//#define TRACKER calcLyap
+#define TRACKER calcLyap
 
 //#define WRITER writeNoabsRes
-#define WRITER writeFixedRes
+//#define WRITER writeFixedRes
 //#define WRITER writeCleanRes
-//#define WRITER writeLyapRes
+#define WRITER writeLyapRes
 
 #define CLEANINGTIME 0
 //#define CLEANINGHEIGHT 0.38
@@ -69,4 +69,4 @@
 #define ZFNAME "./zvals.bin"
 
 #define LYAPTIME 5
-#define NUMSEP 100
+#define NUMSEP 50

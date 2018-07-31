@@ -49,18 +49,14 @@ void force(double *x_in, double *y_in, double *z_in, double *fx, double *fy, dou
 
     double gx=0.0, gy=0.0, gz=0.0, R, r, Rprime, rprime;
     
-    R = 0.5 + 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
-    r = 1.0 - 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
-    Rprime = 0.5*KAPPA*(1.0 - 1.0/(1 + exp(-KAPPA*x)))*1.0/(1 + exp(-KAPPA*x));
-    rprime = -Rprime;
+    r = 1.5;
 
-    double rho = sqrt(y*y+z*z);
-    double r_zeta = sqrt((rho-R)*(rho-R)+x*x);
+    double r_zeta = sqrt(x*x + y*y + z*z);
 
     if (z < -1.0 && r_zeta < r)
     {
-        double eta = r*atan(x/(sqrt(y*y + z*z) - R));
-        double zeta = r - sqrt(x*x + (sqrt(y*y + z*z) - R)*(sqrt(y*y + z*z) - R));
+        double eta = r*atan(x/sqrt(y*y + z*z));
+        double zeta = r - sqrt(x*x + y*y + z*z);
         double sum_cos=0.0, sum_sin=0.0, sum_k_cos=0.0, sum_k_sin=0.0;
         double cos_term=0.0, sin_term=0.0;
         
@@ -86,7 +82,7 @@ void force(double *x_in, double *y_in, double *z_in, double *fx, double *fy, dou
         
         double b_zeta = A*sum_cos;
         double b_eta = A*sum_sin;
-        double b_hold = B_HOLD*(r+R)
+        double b_hold = B_HOLD*r
                             /
                      (sqrt(y*y + z*z));
         
@@ -98,45 +94,36 @@ void force(double *x_in, double *y_in, double *z_in, double *fx, double *fy, dou
 
         //x,y,z
         double d_Bh[3] = {0.0,
-                          -B_HOLD*(r+R)*y/(pow(y*y + z*z, 3.0/2.0)),
-                          -B_HOLD*(r+R)*z/(pow(y*y + z*z, 3.0/2.0))};
-        double d_Zeta[3] = {rprime
-                                +
-                            (Rprime*(sqrt(y*y + z*z) - R) - x)
+                          -B_HOLD*(r)*y/(pow(y*y + z*z, 3.0/2.0)),
+                          -B_HOLD*(r)*z/(pow(y*y + z*z, 3.0/2.0))};
+        double d_Zeta[3] = {
+                            -x
                                         /
-                            sqrt(x*x + ((R - sqrt(y*y + z*z))*(R - sqrt(y*y + z*z)))),
+                            sqrt(x*x + y*y + z*z),
 
-                            -y*(sqrt(y*y + z*z) - R)
+                            -y
                                 /(
-                                  sqrt(y*y + z*z)
-                                  *sqrt(x*x + ((R - sqrt(y*y + z*z))*(R - sqrt(y*y + z*z))))
+                                  sqrt(x*x + y*y + z*z)
                                  ),
 
-                            -z*(sqrt(y*y + z*z) - R)
+                            -z
                                 /(
-                                  sqrt(y*y + z*z)
-                                  *sqrt(x*x + ((R - sqrt(y*y + z*z))*(R - sqrt(y*y + z*z))))
+                                  sqrt(x*x + y*y + z*z)
                                  )};
-        double d_Eta[3] = {-rprime*atan(
-                                x/(R - sqrt(y*y + z*z))
-                            )
-                                -
-                            (r*(R - sqrt(y*y + z*z) - x*Rprime))
+        double d_Eta[3] = {(r*sqrt(y*y + z*z))
                             /
-                            (x*x + y*y + z*z + R*R - 2*R*sqrt(y*y + z*z)),
+                            (x*x + y*y + z*z),
 
                            -r*x*y
                             /(
-                               sqrt(y*y + z*z)
-                               *((R - sqrt(y*y + z*z))*(R - sqrt(y*y + z*z)))
-                               *(1.0 + x*x/((R - sqrt(y*y + z*z))*(R - sqrt(y*y + z*z))))
+                               (y*y + z*z)
+                               *(1.0 + x*x/(y*y + z*z))
                              ),
 
                            -r*x*z
                             /(
-                               sqrt(y*y + z*z)
-                               *((R - sqrt(y*y + z*z))*(R - sqrt(y*y + z*z)))
-                               *(1.0 + x*x/((R - sqrt(y*y + z*z))*(R - sqrt(y*y + z*z))))
+                               (y*y + z*z)
+                               *(1.0 + x*x/(y*y + z*z))
                              )};
         
         gx = MU_N*(1.0/b_tot)*(
@@ -181,19 +168,15 @@ void fieldstrength(double *x_in, double *y_in, double *z_in, double *totalB, dou
     double z_grav = *z_in;
 
     double R, r, Rprime, rprime;
-    
-    R = 0.5 + 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
-    r = 1.0 - 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
-    Rprime = 0.5*KAPPA*(1.0 - 1.0/(1 + exp(-KAPPA*x)))*1.0/(1 + exp(-KAPPA*x));
-    rprime = -Rprime;
 
-    double rho = sqrt(y*y+z*z);
-    double r_zeta = sqrt((rho-R)*(rho-R)+x*x);
+    r = 1.5;
+
+    double r_zeta = sqrt(x*x + y*y + z*z);
 
     if (z < -1.0 && r_zeta < r)
     {
-        double eta = r*atan(x/(sqrt(y*y + z*z) - R));
-        double zeta = r - sqrt(x*x + (sqrt(y*y + z*z) - R)*(sqrt(y*y + z*z) - R));
+        double eta = r*atan(x/sqrt(y*y + z*z));
+        double zeta = r - sqrt(x*x + y*y + z*z);
         double sum_cos=0.0, sum_sin=0.0;
         double cos_term=0.0, sin_term=0.0;
         
@@ -217,7 +200,7 @@ void fieldstrength(double *x_in, double *y_in, double *z_in, double *totalB, dou
         
         double b_zeta = A*sum_cos;
         double b_eta = A*sum_sin;
-        double b_hold = B_HOLD*(r+R)
+        double b_hold = B_HOLD*(r)
                             /
                      (sqrt(y*y + z*z));
         
@@ -243,18 +226,14 @@ void potential(double *x_in, double *y_in, double *z_in, double *totalU, double*
 
     double R, r, Rprime, rprime;
     
-    R = 0.5 + 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
-    r = 1.0 - 0.5/(1 + exp(-KAPPA*x));// + AMPLITUDE * sin(2*M_PI * FREQ * (*t));
-    Rprime = 0.5*KAPPA*(1.0 - 1.0/(1 + exp(-KAPPA*x)))*1.0/(1 + exp(-KAPPA*x));
-    rprime = -Rprime;
+    r = 1.5;
 
-    double rho = sqrt(y*y+z*z);
-    double r_zeta = sqrt((rho-R)*(rho-R)+x*x);
+    double r_zeta = sqrt(x*x + y*y + z*z);
 
     if (z < -1.0 && r_zeta < r)
     {
-        double eta = r*atan(x/(sqrt(y*y + z*z) - R));
-        double zeta = r - sqrt(x*x + (sqrt(y*y + z*z) - R)*(sqrt(y*y + z*z) - R));
+        double eta = r*atan(x/sqrt(y*y + z*z));
+        double zeta = r - sqrt(x*x + y*y + z*z);
         double sum_cos=0.0, sum_sin=0.0;
         double cos_term=0.0, sin_term=0.0;
         
@@ -278,7 +257,7 @@ void potential(double *x_in, double *y_in, double *z_in, double *totalU, double*
         
         double b_zeta = A*sum_cos;
         double b_eta = A*sum_sin;
-        double b_hold = B_HOLD*(r+R)
+        double b_hold = B_HOLD*(r)
                             /
                      (sqrt(y*y + z*z));
         
